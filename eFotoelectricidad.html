@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title> eFotoelectricidad</title>
+
+<style type="text/css">
+
+body {
+	width: 920px;
+	margin: 0px auto;
+	text-align: justify;
+	padding-left:0px;
+	padding-right:0px;
+	color:darkslategray;
+	font-family:sans-serif;
+    // otras fonts: Calibri, Arial, Times, Verdana, Optima, Cambria
+	font-size: large;
+}
+
+p, ul {
+    width: 75%;
+    margin-left: 50px;
+}
+
+li {
+   margin-left: 60px;
+}
+
+em{
+	color:darkred;
+   font-style: normal;  
+}
+
+em.preg{
+   background-color:  LightYellow;
+   font-style: normal;
+}
+
+h1 {
+    color:darkgreen;
+	padding-bottom:0px;
+	text-align: center;
+}
+
+h2 {
+	color:darkgreen;
+	padding-top:40px;
+	text-align: center;
+    font-weight: bolder;
+}
+
+h3, h4 {
+	color:darkgreen;
+	padding-top:40px;
+	text-align: center;
+}
+
+select {
+	font-size: 12pt;
+	line-height: 30px;
+}
+
+em{
+	color:darkred;
+    font-style: normal;   
+}
+
+strong {
+	color:Teal;
+}
+
+li {
+	color: darkslategray;
+}
+
+figure {
+	color:indigo;
+}
+
+figcaption {
+	margin-left:20 px;
+	text-align: left;
+    font-size:smaller;
+}
+
+.bloque_figs::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+:root {
+	--color: darkgreen;
+}
+
+#ref{
+	position:relative;
+	width:1080px;
+	height:330px;
+	//border:1px solid;
+	margin-left:0px;
+	margin-top:20px;
+}
+
+#ref:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#fig {
+	position: absolute;
+	left: 40px;
+	top: 40px;
+	width: 390px;
+	height: 250px;
+	border: 1px solid var(--color);
+}
+
+#x {
+	position: absolute;
+	left: 190px;
+	top: 310px;
+	width: 90px;
+	color: var(--color);
+   font-size: 15px;
+}
+
+#fotocte{
+	position: absolute;
+	left: -50px;
+	top: 160px;
+	color:var(--color);
+	transform: rotate(-90deg);
+	font-family: Arial;
+   //font-style:italic;
+   //font-weight: bold;
+}
+
+#lfrec {
+	position: absolute;
+	left: 40px;
+	top: 5px;
+	color: var(--color);
+}
+
+#frec {
+	position: absolute;
+	left: 90px;
+	top: 5px;
+	color: var(--color);
+}
+
+#lfrec_de {
+	position: absolute;
+	width:30px;
+	left: 40px;
+	top: 300px;
+	color: var(--color);
+}
+
+#frec_de {
+	position: absolute;
+	width:40px;
+	left: 75px;
+	top: 300px;
+	color: var(--color);
+}
+
+#lfrec_a {
+	position: absolute;
+	left: 365px;
+	top: 300px;
+	color: var(--color);
+}
+
+#frec_a {
+	position: absolute;
+	left: 385px;
+	top: 300px;
+	width:40px;
+	color: var(--color);
+}
+
+#lpot {
+	position: absolute;
+	left: 170px;
+	top: 5px;
+	color: var(--color);
+}
+
+#pot {
+	position: absolute;
+	left: 210px;
+	top: 5px;
+	color: var(--color);
+}
+
+#lpot_de {
+	position: absolute;
+	width:30px;
+	left: 40px;
+	top: 300px;
+	color: var(--color);
+}
+
+#pot_de {
+	position: absolute;
+	width:40px;
+	left: 75px;
+	top: 300px;
+	color: var(--color);
+}
+
+#lpot_a {
+	position: absolute;
+	left: 365px;
+	top: 300px;
+	color: var(--color);
+}
+
+#pot_a {
+	position: absolute;
+	left: 385px;
+	top: 300px;
+	width:40px;
+	color: var(--color);
+}
+
+#lvolt {
+	position: absolute;
+	left: 315px;
+	top: 5px;
+	color: var(--color);
+	}
+
+#volt {
+	position: absolute;
+	width:50px;
+	left: 360px;
+	top: 5px;
+	color: var(--color);
+}
+
+#lvolt_de {
+	position: absolute;
+	width:50px;
+	left: 40px;
+	top: 300px;
+	color: var(--color);
+}
+
+#volt_de {
+	position: absolute;
+	width:40px;
+	left: 75px;
+	top: 300px;
+	color: var(--color);
+}
+
+#lvolt_a {
+	position: absolute;
+	left: 365px;
+	top: 300px;
+	color: var(--color);
+}
+
+#volt_a {
+	position: absolute;
+	left: 385px;
+	top: 300px;
+	width:40px;
+	color: var(--color);
+}
+
+#btn_fotocte{
+	background-color: MediumSeaGreen;
+	position: absolute;
+	left: 480px;
+	top: 255px;
+}
+
+#btn_fotocte:hover{
+	background-color: SpringGreen;
+}
+
+#btn_fotocte:active{
+	transform: translateY(3px);
+}
+
+
+.ocultar{
+	visibility: hidden;
+}
+
+button {
+  border: none;
+  color: white;
+  padding: 8px 8px;
+  margin-right:15px;
+  text-align: right;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  float:left;
+}
+
+input{
+	width:35px;
+    font-size: smaller;
+}
+
+/* hide arrows
+ Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+#cabtabla {
+	position: absolute;
+	left: 610px;
+	top: 5px;
+	color: var(--color);
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#tabla {
+	position: absolute;
+	left: 595px;
+	top: 40px;
+	overflow: scroll;
+	width: 310px;
+	height: 280px;
+	border: 1px dotted;
+	font-size:12px;
+}
+
+#limites {
+	position:absolute;
+	left:445px;
+	top: 100px;
+	/*width: 170px;*/
+	font-size:small;
+	color:DarkSlateGray;
+}
+
+</style>
+
+
+<script>
+// params básicos de entrada
+var radioTubo=5E-2; // 5 cm de radio
+var longTubo=5E-2; // 5 cm de longitud
+// la funcion trabajo W se mueve entre 2 y 6 eV
+// frecuencias del Hg: más de 60 líneas entre 0.5 eV y 13 eV aprox. lo que da un paso aprox de 0.2 eV
+// en Hz eso da entre aprox 1 y 30 en unidades de 10^14 Hz.
+// tomando W entre 2 y 6 eV habrá frecuencias por encima y por debajo
+// var funcTrabajo=4*Math.random()+ 2;
+var funcTrabajo; // se fijará según dni
+// var eFermi=2.5*funcTrabajo-2.46; // correlación empírica aproximada
+var constPlanck=4.136E-15; // en eV.s
+// la energía cinética de los electrones podrá ir de 0 a eMaxEnBanda
+// en nuestro caso, la máxima Ec sería h*f_max - W_min=13-2=11 eV
+// por tanto 11 eV corresponde claro a 11 V; por eso tomaré Vmax=12 V.
+// en cuanto al signo de V, tomaré el emisor como ánodo
+// la irradiancia al emisor desde la lámpara de Hg será en unidades arbitrarias, de 0 a 100.
+// el factorFC que conecta la  potencia de entrada con la fotocorriente  será también
+//  en función del dni 
+// el factorFC se basa en el dato de que los fotones necesarios para producir un 
+// fotoelectron  se mueven entre 10^5 y 10^6 (de un tal John Rennie)
+// de ahí yo obtengo que, con 10^5, 10 W dan lugar a 10 uA
+// y si son 10^6, 10 W dan lugar a 1 uA
+var factorFC;
+var numElectr=1000;
+var aElectr=new Array(numElectr); // array que se prellenará de electrones
+// límites de los parámetros
+var voltMin=parseFloat(-12);
+var voltMax=parseFloat(12);
+var frecMin=parseFloat(1); // en unidades de 10^14 Hz
+var frecMax=parseFloat(30); // eso cubre las líneas del Hg
+// y admitiré frec continio porque el Hg tiene en ese rango sobre 60 líneas
+var potMin=parseFloat(0);
+var potMax=parseFloat(10); // serán W
+var color="darkgreen";
+
+
+function init(){
+     generarIncognitas();
+// montar array de electrones con sus propiedades
+	for (let i=0; i<numElectr; i++) {
+		let yInicial=radioTubo*Math.random()-radioTubo/2; // el haz cubre la mitad del ánodo, de -R/2 a R/2
+		let angInicial=Math.PI/4*Math.random(); // eso da aleatorio de 0 a 45º
+		let signo=Math.sign(Math.random()-0.5);//-1 o +1 al azar
+		let angInicialEff=signo*Math.PI/4*(1-Math.cos(angInicial))/(1-Math.cos(Math.PI/4));// eso da aleatorio de -45º a 45º con un sesgo hacia ángulos bajos: ley de Lambert
+		let rnd=Math.random();
+		aElectr[i]=new electr(yInicial,angInicialEff, rnd);
+	} 
+}
+
+function generarIncognitas() {
+    // extraer dni
+    var cad=window.location.search;
+    if (cad && cad.indexOf('undefined')== -1)
+        var dni=cad.substring(cad.indexOf('=')+1,cad.length);
+    else
+        window.location.href="index.html";
+// asignar valores a funcTrabajo y factorFC
+    let int_010=dni % 11; // de 0 a 10
+    let Wmin=2; // funcTrabajo mínima
+    let Wmax=6; // funcTrabajo máxima
+    funcTrabajo=Wmin+int_010*(Wmax-Wmin)/10.0; //  entre Wmin y Wmax
+    let FCmin=0.1; // conversor de W. a uA mínimo
+    let FCmax=1; // factor conversor de W a uA máximo
+    factorFC=FCmin+int_010*(FCmax-FCmin)/10.0; // entre FCmin y FCmax
+   // entonces FC=factorFC*pot (si todos los electrones que salen del emisor llegan al colector)
+    console.log("W, fFC= "+ funcTrabajo+"   "+factorFC);
+}
+function montarGraf(){
+	// volver todo a inicio por si no es primer uso de la gráfica
+	ocultarTodo();
+	let x=document.getElementById("x").value;
+	var aEle=[];
+	switch (x) {
+	case "volt":
+	  aEle=["lfrec", "frec", "lpot", "pot", "lvolt_de", "volt_de", "lvolt_a", "volt_a"];
+		break;
+	case "frec":
+		 aEle=["lpot", "pot", "lvolt", "volt", "lfrec_de", "frec_de", "lfrec_a", "frec_a"];
+		break;
+	case "pot":
+		aEle=["lfrec", "frec", "lvolt", "volt", "lpot_de", "pot_de", "lpot_a", "pot_a"];
+	}
+	for (let i = 0; i < aEle.length; i++)
+	  	document.getElementById(aEle[i]).style.visibility="visible";
+}
+
+function ocultarTodo() {
+	var aEle=[];
+	aEle=["lfrec", "frec", "lpot", "pot",  "lvolt", "volt", "lvolt_de", "volt_de", "lvolt_a", "volt_a", "lfrec_de", "frec_de", "lfrec_a", "frec_a", "lpot_de", "pot_de", "lpot_a", "pot_a" ];
+	for (let i = 0; i < aEle.length; i++)
+	  	document.getElementById(aEle[i]).style.visibility="hidden";
+}
+
+function medirFC() {
+	let x=document.getElementById("x").value;
+	var tabla=document.getElementById("tabla");
+	var fig=document.getElementById("fig");
+	var linea="";
+	var nColector; // fracción de electrones que llegan al colector
+	var fotoCte;
+	var incr;
+	var frec, volt, pot;
+	var arrayX=[], arrayY=[];
+	switch (x) {
+	case "volt":
+		frec=document.getElementById("frec").value;
+		if (frec.length == 0)  return
+		else frec = +frec; // convertir a número
+		if (frec < frecMin || frec > frecMax) alert("frec  está fuera de rango");
+		pot=document.getElementById("pot").value;
+		if (pot.length == 0)  return
+		else pot = +pot;
+		if (pot < potMin || pot > potMax) alert("pot está fuera de rango");
+		var volt_de=document.getElementById("volt_de").value;
+		if (volt_de.length == 0)  return
+		else volt_de = +volt_de;
+		if (volt_de < voltMin || volt_de > voltMax) alert("'volt de' está fuera de rango");
+		var volt_a=document.getElementById("volt_a").value;
+		if (volt_a.length == 0)  return
+		else volt_a = +volt_a;
+		if (volt_a < voltMin || volt_a > voltMax) alert("'volt a' está fuera de rango");
+		// con "V" se puede hacer un continuo de valores, usaré 20
+		incr=(volt_a-volt_de)/20;
+		for (let volt = volt_de; volt <= 1.0001*volt_a; volt += incr) {
+			 nColector=nElectr(frec*1e14,volt); // son la fracción de electrones llegados al colector
+			 fotoCte=pot*factorFC*nColector; // en uA
+			linea="  "+formatear(pot)+"      "+formatear(volt)+"      " + formatear(frec) + "      "+formatear(fotoCte)+"\n";
+			tabla.innerHTML+=linea;
+			arrayX.push(volt);
+			arrayY.push(fotoCte);
+		}
+		break;
+	case "frec":
+		volt=document.getElementById("volt").value;
+		if (volt.length == 0)  return
+		else volt = +volt;
+		if (volt < voltMin || volt > voltMax) alert("volt está fuera de rango");
+		pot=document.getElementById("pot").value;
+		if (pot.length == 0)  return
+		else pot = +pot;
+		if (pot < potMin || pot > potMax) alert("pot está fuera de rango");
+		var frec_de=document.getElementById("frec_de").value;
+		if (frec_de.length == 0)  return
+		else frec_de = +frec_de;
+		if (frec_de < frecMin || frec_de > frecMax) alert("'frec de'  está fuera de rango");
+		var frec_a=document.getElementById("frec_a").value;
+		if (frec_a.length == 0)  return
+		else frec_a = +frec_a;
+		if (frec_a < frecMin || frec_a > frecMax) alert("'frec a'  está fuera de rango");
+		// admito un continio de valores de frec, con límites, usaré 20
+		incr=Math.max(0.25,(frec_a-frec_de)/20);
+		for (let frec = frec_de; frec <= 1.0001*frec_a; frec += incr) {
+			 nColector=nElectr(frec*1e14,volt); // son la fracción de electrones llegados al colector
+			 fotoCte=pot*factorFC*nColector; // en uA
+			linea="  "+formatear(pot)+"      "+formatear(volt)+"      " + formatear(frec) + "      "+formatear(fotoCte)+"\n";
+			tabla.innerHTML+=linea;
+			arrayX.push(frec);
+			arrayY.push(fotoCte);
+		}
+		break;
+	case "pot":
+		volt=document.getElementById("volt").value;
+		if (volt.length == 0)  return
+		else volt = +volt;
+		if (volt < voltMin || volt > voltMax) alert("volt está fuera de rango");
+		frec=document.getElementById("frec").value;
+		if (frec.length == 0)  return
+		else frec = +frec; // convertir a número
+		if (frec < frecMin || frec > frecMax) alert("frec  está fuera de rango");
+		var pot_de=document.getElementById("pot_de").value;
+		if (pot_de.length == 0)  return
+		else pot_de = +pot_de;
+		if (pot_de < potMin || pot_de > potMax) alert("'pot de' está fuera de rango");
+		var pot_a=document.getElementById("pot_a").value;
+		if (pot_a.length == 0)  return
+		else pot_a = +pot_a;
+		if (pot_a < potMin || pot_a > potMax) alert("'pot a' está fuera de rango");
+		nColector=nElectr(frec*1e14,volt); // esa fracción no depende de la potencia de iluminación
+		// admito un continuo de valores de pot, usaré 20
+		incr=(pot_a-pot_de)/20;
+		for (let pots = pot_de;pots <= 1.0001*pot_a;pots += incr) {
+			 fotoCte=pots*factorFC*nColector; // en uA
+			 linea="  "+formatear(pots)+"      "+formatear(volt)+"      " + formatear(frec) + "      "+formatear(fotoCte)+"\n";
+			tabla.innerHTML+=linea;
+			arrayX.push(pots);
+			arrayY.push(fotoCte);
+		}
+	}
+	tabla.innerHTML+="\n"; // para separar series de medida
+	plotear(arrayX, arrayY, fig, color);
+}
+
+function nElectr(frec,volt){
+	if (constPlanck*frec <= funcTrabajo) return 0; // frecuencia umbral para efecto fotoeléctrico
+	let eMaxEnBanda=constPlanck*frec-funcTrabajo; // en eV
+	let cont=0; // contador de fotoelectrones a colector
+	// hago uso del lote de electrones precreados, propiedades incluidas
+	for (let i=0; i<aElectr.length;i++){
+		// tenemos de 0 a eMaxEnBanda como energías posibles de los fotoelectrones:
+		let eEnBanda=eMaxEnBanda*aElectr[i].rnd;
+		// como la densidad de estados varía según raiz(energia), remapeamos eEnBanda a eEnBandaEff vía:
+		let eEnBandaEff=Math.sqrt(eMaxEnBanda*eEnBanda);
+		let eCinetica=eMaxEnBanda-eEnBandaEff; // energía sobrante en eV
+		let vInicial=5.93e5*Math.sqrt(eCinetica); // en m/s
+		// ángulo inicial de -45º a 45º aleatorio pero con una función de probabilidad cos(angulo): ley de Lambert, ver func init():
+		let angInicialEff=aElectr[i].ang0;
+		// console.log("angInicialEff:"+angInicialEff);
+		// velocidad inicial
+		let vInicialX=vInicial*Math.cos(angInicialEff);
+		let vInicialY=vInicial*Math.sin(angInicialEff);
+		// posicion inicial: x0=0, -R/2<y0<R/2 aleatoria
+		let xInicial=0;
+		let yInicial=aElectr[i].y0; // el haz cubre la mitad del ánodo
+		// a=F/m = -eV/m/l // según elección del sentido de V
+		let aceler=-1.76E11*volt/longTubo;
+		// criterio de llegada a colector: x=longTubo
+		let cronEnColector; // tiempo en que x=longTubo, que puede ser doble, a la ida y a la vuelta
+		if (aceler==0) cronEnColector=longTubo/vInicialX;
+		else cronEnColector=(-vInicialX + Math.sqrt(vInicialX*vInicialX+2*aceler*longTubo))/aceler;
+		let yEnColector=vInicialY*cronEnColector+yInicial; // test para electron dentro del tubo a tiempo cronEnColector
+		//console.log("yEnColector:"+yEnColector);
+		if (Math.abs(yEnColector)<=radioTubo) cont++;
+	}
+	return cont/aElectr.length;
+}
+
+function electr(y0, ang0, rnd) {
+	this.y0=y0;
+	this.ang0=ang0;
+	this.rnd=rnd; // aleatorios de base, entre 0 y 1, para reproducir energías
+}
+
+function plotear(arrayX, arrayY, lienzo, color){
+	// origen en esquina superior izqda
+	let dw=30;
+	let dh=6;
+	var ctx=lienzo.getContext('2d');
+	var wl=lienzo.width; // anchura lienzo en px
+	var hl=lienzo.height; // altura lienzo en px
+	ctx.clearRect(0,0,wl,hl);
+	ctx.fillStyle=color;
+	ctx.strokeStyle=color;
+	// extremos valores usuario
+	var xm=Math.min.apply(null,arrayX);
+	var xM=Math.max.apply(null,arrayX);
+	var ym=Math.min.apply(null,arrayY);
+	var yM=Math.max.apply(null,arrayY);
+	var xp, yp; // coordenadas punto en px
+	var wRect=4;
+	var hRect=4;
+	for (i=0; i<arrayX.length; i++) {
+		xp=wl/(xM-xm)*(arrayX[i]-xm); // conversión de u.u. a px en x
+		yp=(hl-2*dh)/(ym-yM)*(arrayY[i]-yM)+dh; // conversión de u.u. a px en y con dh de margen
+		ctx.fillRect(xp-wRect/2,yp-hRect/2,wRect,hRect);
+	}
+}
+
+function formatear(cadNum){
+    let cad=cadNum.toFixed(2);
+    return cad.replace(".",",");
+}
+
+</script>
+
+</head>
+
+
+
+<body  onload="init()">
+
+<h1>Efecto Fotoeléctrico</h1>
+
+<h2>1. Introducción</h2>
+
+<p>A finales del siglo XIX los físicos sabían que si se iluminaba una placa metálica (en vacío) cargada con una luz ultravioleta, la placa se descargaba. Cuanto más brillante era la luz ultravioleta antes se descargaba. Se denomina así el <em>efecto fotoeléctrico</em> por cuanto la luz (foto) puede arrancar electrones  (electricidad) del metal. El punto central es que no ocurría sin embargo lo mismo con otras luces de mayor longitud de onda, sin importar la potencia de la misma.</p>
+
+<p>Fue en 1905 que A. Einstein escribió un artículo en el que proponía que la energía de la luz se concentraba en paquetes de energía, llamados <em>cuantos</em>, y que en interacción con cualquier material, el intercambio de energía se hacía solamente en cuantos discretos. Además, esa energía indivisible, que se denominó <em>fotón</em>,  era proporcional a la frecuencia de la luz. Fue merecedor por ello del Premio Nobel en 1921.</p>
+
+<p>Por tanto, el rasgo definitorio del efecto fotoeléctrico es el hecho de que no importa la cantidad de energía que un metal reciba, si aquella no es de una "calidad" determinada, no puede arrancar electrones del metal.</p>
+
+<h2>2. Fundamentos</h2>
+
+<p>Para avanzar, necesitamos tener una idea del "escenario" en que tiene lugar la absorción de energía electromagnética por un metal. No argumentamos aquí que la energía mínima de una radiación electro-magnética es hf siendo h la constante de planck: 6,626 × 10<sup>-34</sup> J/s = 4,136  × 10<sup>-15</sup> eV&middot;s</p>
+<figure>
+<img src="figuras/fundamentos0.png" width="400" alt="">
+<figcaption> <br> Fig.1. Energías en juego en el efecto fotoeléctrico. </figcaption>
+</figure> <br>
+<p>En la figura adjunta se ilustra esquemáticamente la situación energética de los electrones de conducción (son aquellos que contribuyen a la conductividad eléctrica y térmica propia de los metales). Estos electrones son móviles por el interior del metal y, al independizarse de los átomos del metal, los dejan cargados positivamente, formando cationes. Igual que en el átomo, los electrones de conducción se sitúan jerárquicamente en energía, formando una banda de energías, que se suele denominar <em>mar de Fermi</em>.</p>
+
+<p>Aunque los electrones de conducción se mueven libremente por el interior, no pueden abandonar el metal debido a los cationes positivos de la red, de manera que existe una barrera de energía, W, que deben superar para poder saltar fuera del metal. Esa magnitud se denomina <em><b>Función trabajo</b></em> y su conocimiento es el objetivo principal aquí.</p>
+
+<p> <em>Admitiremos que un electrón absorbe un fotón o ninguno de la onda incidente.</em> De este modo, no importan los fotones de energía que contenga la radiación, sino la energía del fotón. Es lo que pretende ilustrar la Fig. 1 para el caso hf < W.</p>
+
+<div class="bloque_figs">
+
+	<div style="float:left; padding-top: 100px;  width:40%;">
+	<figure>
+	<img src="figuras/fundamentos2.png"  width="350" alt="">
+	<figcaption> <br> Fig.2. Energías en juego en el <br> efecto fotoeléctrico.
+	</figure>
+	</div>
+
+	<div style="float:left; vertical-align:bottom; width:40%; padding-left:100px;">
+	<figure>
+	<img src="figuras/fundamentos.png"  width="350"  alt="">
+	<figcaption> <br> Fig.3. Electrones con diferente energía  de ligadura  captando el mismo fotón. </figcaption>
+	</figure>
+	</div>
+
+</div>
+
+<p>En la Fig. 2 se esquematizan las energías que se ponen en juego cuando un electrón capta un fotón. Disponemos de una energía hf del fotón. Si queremos arrancar un electrón, necesitaremos una energía mínima W; pero además, dado que lo normal es que el electrón tenga una energía de ligadura no nula &epsilon;, el gasto será W+&epsilon;. La energía sobrante aparecerá en forma de energía cinética E<sub>c</sub>. La Fig. 2. ilustra de manera alternativa este mismo efecto. En total:</p>
+
+<p><em style="border:1px solid darkgreen;padding:5px;"> &nbsp; hf = (W+&epsilon;)+ E<sub>c</sub> &nbsp;</em> &emsp; (1).</p>
+
+<p>La ecuación (1) anterior es la ecuación básica del efecto fotoeléctrico. <em>La idea importante es que aunque todos los fotones que inciden en el metal sean iguales, los fotoelectrones se emiten con un rango de energías. </em>Como caso particular, los electrones más energéticos serán los que estuvieran más alto en energía dentro del metal, es decir, &epsilon;=0, o bien,</p>
+<p><em  style="border:1px solid darkgreen;padding:5px;"> &nbsp; hf = W+ E<sub>cmax</sub> &nbsp;  </em>&emsp; (2).</p>
+
+<h3>a) Montaje experimental</h3>
+<figure style="float:left;">
+<img src="figuras/setup.png" width="400"  alt="">
+<figcaption> <br> Fig.4. Elementos básicos en el montaje experimental. </figcaption>
+</figure>
+<br> <br>
+<ul>Como ilustra la Fig. 4, los elementos básicos son:<br><br>
+<li>el metal emisor, que recibe la radiación y eventualmente emite electrones</li>
+<li>el metal colector, que  recibe los electrones formando la <em>fotocorriente</em></li>
+<li>tubo al vacío, que protege la fotocorriente de interferencias</li>
+<li><b>voltaje regulable entre emisor, que se toma como ánodo (+) y colector, que tomaremos como cátodo (-)</b></li>
+<li>medidor de la fotocorriente, normalmente en el rango de los microamperios</li>
+<li>fuente de radiación, normalmente una lámpara de Hg, que genera un gran número de <em>líneas</em> entre el rango visible y ultravioleta.</li>
+<li>un filtro que permite seleccionar la frecuencia de trabajo.</li>
+</ul>
+<br>
+<h3 style="clear:both;"> b) Fotocorriente</h3>
+<p>Vamos a revisar cómo actúan las distintas variables sobre la fotocorriente, sirviéndonos de figuras.</p>
+<h4>Efecto del voltaje externo</h4>
+<div class="bloque_figs">
+	<div style="float:left; width:30%;">
+	<figure>
+	<img src="figuras/signo_volt0.png" width="125%" alt="">
+	<figcaption> <br> Fig.5. Electrones emergentes sin voltaje aplicado. </figcaption>
+	</figure>
+	</div>
+	<div style="float:left; width:30%;">
+	<figure>
+	<img src="figuras/signo_volt1.png"  width="125%" alt="">
+	<figcaption> <br> Fig.6. Electrones emergentes con voltaje externo desfavorable.
+	</figure>
+	</div>
+	<div style="float:left; width:30%;">
+	<figure>
+	<img src="figuras/signo_volt2.png" width="125%" alt="">
+	<figcaption> <br> Fig.7. Electrones emergentes con voltaje externo favorable.
+	</figure>
+	</div>
+</div>
+<p>Una primera observación pertinente es que experimentalmente se sabe que <em>los fotoelectrones salen del emisor con una dirección variable</em> que sigue la distribución de Lambert del coseno:<br>
+I(&theta;) = I<sub>0</sub> cos &theta;<br>
+siendo &theta; el ángulo respecto de la normal.</p>
+<p>Nótese también que <em>no todos los fotoelectrones llegan al cátodo</em>, incluso a potencial cero, pues quedan atrapados en el tubo. Ese número aumenta con un potencial favorable (asociado a la condición voltaje<sub>emisor</sub> < voltaje<sub>colector</sub>) pero puede no llegar al 100%.</p>
+<p>Para estas y otras particularidades del efecto fotoeléctrico, consultar: <br>
+<cite> On the Conceptual Understanding of the Photoelectric Effect</cite> <br> by S.K.Foong et al. en https://doi.org/10.1063/1.3479845.
+</p>
+<h4>Efecto de la frecuencia</h4>
+<div class="bloque_figs">
+	<div style="float:left; width:30%;">
+	<figure>
+	<img src="figuras/frec_noefecto.png" width="125%" alt="">
+	<figcaption> <br> Fig.8. Ausencia de fotoelectrones a frecuencias por debajo de la umbral. </figcaption>
+	</figure>
+	</div>
+	<div style="float:left; width:30%;">
+	<figure>
+	<img src="figuras/frec_baja.png"  width="125%" alt="">
+	<figcaption> <br> Fig.9. Los electrones emergentes tienen baja energía y son muy afectados por el potencial "adverso".
+	</figure>
+	</div>
+	<div style="float:left; width:30%;">
+	<figure>
+	<img src="figuras/frec_alta.png" width="125%" alt="">
+	<figcaption> <br> Fig.10. Los electrones emergentes tienen alta energía y son poco afectados por el potencial "adverso".
+	</figure>
+	</div>
+</div>
+<p>Aquí la interpretación es más sencilla. De acuerdo con la ecuación (1), a más frecuencia de los fotones más energía cinética en media corresponderá a los fotoelectrones. Eso implica más velocidad y menos influencia del potencial externo; en las figuras se ha tomado un potencial desfavorable al movimiento de los fotoelectrones.</p>
+<h4>Efecto de la irradiancia sobre el emisor</h4>
+<div class="bloque_figs">
+	<div style="float:left; width:40%;">
+	<figure>
+	<img src="figuras/intens_baja.png" width="100%" alt="">
+	<figcaption> <br> Fig.11. Baja tasa de fotones implica baja tasa de fotoelectrones producidos. </figcaption>
+	</figure>
+	</div>
+	<div style="float:left; width:40%;">
+	<figure>
+	<img src="figuras/intens_alta.png"  width="100%" alt="">
+	<figcaption> <br> Fig.12. Alta tasa de fotones implica alta tasa de fotoelectrones producidos.
+	</figure>
+	</div>
+</div>
+<p>De nuevo, aquí la interpretación es sencilla. A más fotones entrantes sobre el emisor procedentes de la lámpara de Hg, mayor, en la misma proporción, los fotoelectrones arrancados.</p>
+
+
+<h2>3. Módulo de experimentación</h2>
+<p>El módulo de experimentación consta de un "graficador" que permite visualizar y medir la evolución de la fotocorriente, que es la magnitud medible, frente a cualquier variable, sea la frecuencia, la potencia de la lámpara de Hg  o el voltaje emisor-colector.</p>
+<p> Los resultados se muestran también numéricamente en formato tabla. La tabla es editable, lo que significa que se pueden copiar los datos para, por ejemplo, analizarlos en un entorno adecuado, como una hoja de cálculo. </p>
+
+<div id="ref">
+
+<canvas id="fig">
+</canvas>
+
+<select id="x" onchange="montarGraf()">
+	<option value="X"> escoger </option>
+	<option value="volt"> volt </option>
+	<option value="frec"> frec  </option>
+	<option value="pot"> pot </option>
+</select>
+
+<span id="lfrec"  class="ocultar"> frec:</span>
+<input type="number" id="frec" class="ocultar" value="">
+
+<span id="lpot"  class="ocultar"> pot:</span>
+<input  type="number" id="pot" class="ocultar" value="">
+
+<span id="lvolt"  class="ocultar"> volt:</span>
+<input  type="number" id="volt" class="ocultar" value="">
+
+<span id="lvolt_de"  class="ocultar"> de:</span>
+<input  type="number" id="volt_de"  class="ocultar" value="">
+<span id="lvolt_a"  class="ocultar"> a:</span>
+<input  type="number" id="volt_a"  class="ocultar" value="">
+
+<span id="lfrec_de"  class="ocultar"> de:</span>
+<input  type="number" id="frec_de"  class="ocultar" value="">
+<span id="lfrec_a"  class="ocultar"> a:</span>
+<input  type="number" id="frec_a"  class="ocultar" value="">
+
+<span id="lpot"  class="ocultar"> pot:</span>
+<input type="number" id="pot" class="ocultar" value="">
+
+<span id="lpot_de"  class="ocultar"> de:</span>
+<input  type="number" id="pot_de"  class="ocultar" value="">
+<span id="lpot_a"  class="ocultar"> a:</span>
+<input  type="number" id="pot_a"  class="ocultar" value="">
+
+
+<span id="fotocte"> Fotocorriente (&mu;A) </span>
+
+<button  id="btn_fotocte" onclick="medirFC()">Medir</button>
+
+<div id="limites">
+Valores admisibles <br>
+de los parámetros:<br><br>
+-12 &leq; volt (V) &leq; 12<br>
+1 &leq; frec (10<sup>14</sup> Hz) &leq; 30 <br>
+0 &leq; pot (W) &leq; 10<br>
+</div>
+
+<div id="cabtabla">
+<pre>pot(W)  volt (V)  frec(10<sup>14</sup> Hz)  FC(&mu;A) </pre>
+</div>
+
+<textarea  id="tabla" readonly="readonly" >
+</textarea>
+
+
+</div>
+
+<h2>4. Ejecución de la ePráctica</h2>
+
+
+<h3>Tarea 2. Determinación de la Función trabajo</h3>
+
+
+<p>Como tarea preliminar, comenzaremos por acotar los valores de la frecuencia de la radiación que son susceptibles de provocar el efecto fotoeléctrico.</p>
+<p> &bull; <strong>graficar la fotocorriente (FC) en función de la frecuencia, usando como parámetros I=50 y V=0</strong>.</p>
+<p> Veremos un salto que sirve para estimar la frecuencia umbral para producir efecto fotoeléctrico; la denotaremos f<sub>u</sub>.  Hay límites al paso mínimo debido al número finito de líneas de la lámpara de Hg.</p>
+
+<p> Volviendo a la ecuación (2): <em> &nbsp; hf = W + E<sub>cmax</sub> ,</em> vemos que, utilizando una frecuencia conocida f (siempre mayor que f<sub>u</sub>), si conseguimos encontrar la energía cinética más alta de los fotoelectrones, accederemos a la función trabajo W. Para ello:</p>
+<p> <strong>&bull; graficar la fotocorriente en función de V crecientemente positivo, usando cualquier f > f<sub>u</sub></strong>.</p>
+
+<p>El valor de V más alto inhibidor de la fotocorriente, que llamaremos <strong>potencial de frenado</strong> y denotaremos como  V<sub>f</sub>, es justo el que corresponde al electrón más rápido; es el que, venciendo el potencial desfavorable, llegaría justo, con velocidad tendiendo a cero, a tocar el colector. Así que por conservación de la energía se cumplirá:</p>
+<p><em>E<sub>cmax</sub> = e V<sub>f</sub> </em>&emsp; (3),&emsp; siendo e la carga del electrón.</p>
+
+<p>Observaremos que, según la ecuación (2), V<sub>f</sub> es una función de f. Esto sugiere:</p>
+<p> &bull;  <strong>hacer un barrido de V<sub>f</sub> a distintas frecuencias f</strong></p>
+<p>de modo que obtendremos una serie de pares (f<sub>i</sub>,V<sub>fi</sub>) que verifican:<br>
+ &nbsp;<em> hf<sub>i</sub> = W+ V<sub>fi</sub></em>&nbsp; &rArr;
+ <em style="border:1px solid darkgreen;padding:5px;"> &nbsp; f<sub>i</sub> = <sup>W</sup>/<sub>h</sub> + <sup>e</sup> / <sub>h</sub> V<sub>fi</sub>&nbsp; &emsp;  (i=1,2,3,...)</em> </p>
+
+<p>Esos pares los vamos anotando en un lugar aparte. Lo ideal, en una hoja de cálculo; en defecto de eso, lo haremos en un papel milimetrado o cuaderno. Bastará ahora hacer una <strong>regresión lineal</strong>, que nos permitirá obtener la función trabajo W a partir del término independiente.</p>
+
+
+<h3>Tarea 2. Determinar la eficiencia fotón / fotoelectrón </h3>
+<p>Nos piden determinar cuántos fotones deben incidir en el emisor por cada fotoelectrón generado. Llamemos f<sub>phe</sub> a ese factor.</p>
+
+<p>Lógicamente, querremos comprobar el efecto de la potencia de iluminación sobre la fotocorriente.</p>
+<p> &bull; <strong>graficar la fotocorriente en función de la potencia  usando como parámetros el voltaje más favorable (queremos garantizar que capturamos todos los fotoelectrones) y cualquier frecuencia f > f<sub>u</sub></strong>.</p>
+
+<p>Observaremos que la FC es estrictamente lineal con la potencia P. Seguramente eso quiere decir algo. Advertimos que, a frecuencia fija,  la potencia es proporcional al número de fotones por segundo que llegan al emisor, en tanto que la fotocorriente lo es al número de electrones por segundo que llegan al colector. </p>
+
+<p>Anotamos la fotocorriente máxima FC<sub>max</sub>,  en &micro;A, que hemos medido correspondiente a la potencia máxima utilizada, P<sub>max</sub>, en W.</p>
+
+<p>La cascada de cuestiones siguientes nos llevará a f<sub>phe</sub>:</p>
+<ul>
+<li>Del lado del colector: ¿a cuántos coulombios por segundo corresponden FC<sub>max</sub>?</li>
+<li>en función de eso, ¿a cuántos electrones por segundo n<sub>e</sub> corresponde?</li>
+<li>Del lado del emisor: ¿cuántos fotones por segundo n<sub>ph</sub> de frecuencia f (la utilizada en la medida) se necesitan para producir la potencia P<sub>max</sub> anotada ?</li>
+</ul>
+<p><em>Si hemos contestado a lo anterior, la eficiencia pedida, f<sub>phe</sub>, no será sino <sup>n<sub>ph</sub></sup>/<sub>n<sub>e</sub></sub>. </em></p>
+
+<h2>5. Preguntas de revisión</h2>
+<p>&bull; Argumenta la veracidad o falsedad de las siguientes afirmaciones:<br>
+<ol>
+<li>la fotocorriente a potencial "favorable" máximo no aumenta con la frecuencia de la radiación incidente</li>
+<li>el potencial de frenado aumenta con la intensidad incidente</li>
+<li>fijando frecuencia, la energía máxima de los fotoelectrones no depende del tipo de emisor</li>
+</ol>
+ </p>
+<p>&bull; Se propone pensar en la idea de averiguar las energías de ligadura de los electrones en el metal emisor (<i>espectro de energías</i>), analizando la fotocorriente.</p>
+<p>Para ello, obsérvese la ecuación (1). Lo que se desearía es saber cuántos electrones hay en el emisor para cada energía &epsilon;. Como pista, se trataría de estudiar la fotocorriente en el colector en función del potencial retardador (signo negativo). Considerar un pequeño intervalo de la curva, <em class="preg">¿qué significa que el número de fotelectrones,  baje en una cierta cantidad, digamos &Delta;n<sub>fc</sub>, para un incremento dado del potencial retardador, digamos de V<sub>1</sub> a V<sub>2</sub> ?</em></p>
+</body>
+</html>

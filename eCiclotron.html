@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title> eCiclotrón</title>
+<style type="text/css">
+
+body {
+	width: 920px;
+	margin: 0px auto;
+	text-align: justify;
+	padding-left:0px;
+	padding-right:0px;
+    color:darkslategray;
+	font-family:sans-serif;
+    // otras fonts: Calibri, Arial, Times, Verdana, Optima, Cambria
+	font-size: large;
+}
+
+p {
+    width: 90%;
+}
+
+H1 {
+	color:darkgreen;
+	padding-top:40px;
+	text-align: center;
+}
+
+H2,H3 {
+	color:darkgreen;
+	padding-top:40px;
+	text-align: left;
+}
+
+select {
+	font-size: 12pt;
+	line-height: 30px;
+}
+
+em{
+	color:darkred;
+   font-style: normal;  
+}
+
+em.preg{
+   background-color:  LightYellow;
+   font-style: normal;
+}
+
+strong {
+	color:Teal;
+}
+
+li {
+	color: darkslategray;
+}
+
+figure {
+	color:indigo;
+}
+
+figcaption {
+	margin-left:20 px;
+	text-align: left;
+    font-size:smaller;
+}
+
+.bloque_figs::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+:root {
+	--color: darkgreen;
+}
+
+#ref{
+	position:relative;
+	width:1080px;
+	height:330px;
+	/*border:1px dotted var(--color2);*/
+	margin-left:0px;
+	margin-top:20px;
+}
+
+#ref:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+#lienzo {
+	position: absolute;
+	left: 30px;
+	top: 40px;
+	width: 410px;
+	height: 300px;
+	border: 1px solid var(--color);
+}
+
+#varx {
+	position: absolute;
+	left: 190px;
+	top: 360px;
+	width: 90px;
+	color: var(--color);
+   font-size: 15px;
+}
+
+#varY{
+	position: absolute;
+	left: -40px;
+	top: 160px;
+	color:var(--color);
+	transform: rotate(-90deg);
+	font-family: Arial;
+   //font-style:italic;
+   //font-weight: bold;
+}
+
+#lfrec_de {
+	position: absolute;
+	width:30px;
+	left: 30px;
+	top: 350px;
+	color: var(--color);
+}
+
+#frec_de {
+	position: absolute;
+	width:40px;
+	left: 65px;
+	top: 350px;
+	color: var(--color);
+}
+
+#lfrec_a {
+	position: absolute;
+	left: 375px;
+	top: 350px;
+	color: var(--color);
+}
+
+#frec_a {
+	position: absolute;
+	left: 395px;
+	top: 350px;
+	width:40px;
+	color: var(--color);
+}
+
+#lvolt {
+	position: absolute;
+	left: 315px;
+	top: 10px;
+	color: var(--color);
+	}
+
+#volt {
+	position: absolute;
+	width:40px;
+	left: 360px;
+	top: 5px;
+	color: var(--color);
+}
+
+#lvolt_de {
+	position: absolute;
+	width:50px;
+	left: 30px;
+	top: 350px;
+	color: var(--color);
+}
+
+#volt_de {
+	position: absolute;
+	width:40px;
+	left: 65px;
+	top: 350px;
+	color: var(--color);
+}
+
+#lvolt_a {
+	position: absolute;
+	left: 375px;
+	top: 350px;
+	color: var(--color);
+}
+
+#volt_a {
+	position: absolute;
+	left: 395px;
+	top: 350px;
+	width:40px;
+	color: var(--color);
+}
+
+
+#btn_varY{
+	background-color: MediumSeaGreen;
+	position: absolute;
+	left: 450px;
+	top: 305px;
+}
+
+#btn_varY:hover{
+	background-color: SpringGreen;
+}
+
+#btn_varY:active{
+	transform: translateY(3px);
+}
+
+.ocultar{
+	visibility: hidden;
+}
+
+button {
+  border: none;
+  color: white;
+  padding: 8px 8px;
+  margin-right:15px;
+  text-align: right;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  float:left;
+}
+
+input{
+  width:35px;
+  font-size: large;
+}
+
+/* hide arrows
+ Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+#cabtabla {
+	position: absolute;
+	left: 620px;
+	top: 5px;
+	color: var(--color);
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#tabla {
+	position: absolute;
+	left: 620px;
+	top: 40px;
+	overflow: scroll;
+	width: 280px;
+	height: 280px;
+	border: 1px dotted;
+	font-size:14px;
+}
+
+#limites {
+	position:absolute;
+	left:460px;
+	top: 100px;
+	width: 160px;
+	font-size:12pt;
+	color:DarkSlateGray;
+}
+
+#btn_borrar{
+   position:absolute;
+	left:840px;
+	top: 330px;
+	width: 70px;
+	font-size:12pt;
+   background-color: CadetBlue;
+
+}
+
+</style>
+
+
+
+<script>
+// params básicos de entrada
+const dalton=1.66e-27; // u.m.a. en kg
+const e=1.e-19; // carga elemental del electrón
+const campoB=1.1; // en Teslas
+const radioDes=0.8; // en m
+const voltMin=10; // V0_min en kV
+const voltMax=100; // V0_max en kV
+const frecMin=1.0; // frec min  1 MHz
+const frecMax=30; // frec max 30 MHz
+const nMin=1; // número mínimo de pases entre dés
+const nMax=80000; // número máximo de pases entre dés
+// estos serán después aleatorios ligados al dni
+var qIon; // será la carga del ion
+var mIon; // será la masa del ion
+var frecB; // será la frecuencia ciclotrón
+var eFinal; // energía a la salida del ciclotrón
+var eInicial; // energía a la entrada del ciclotrón
+const color="darkgreen";
+
+
+function init(){
+   generarIncognitas();
+}
+
+function generarIncognitas() {
+    // extraer dni
+    //var cad=window.location.search;
+    //    if (cad && cad.indexOf('undefined')== -1)
+    //        var dni=cad.substring(cad.indexOf('=')+1,cad.length);
+    //    else
+    //        window.location.href="index.html";
+    // asignar valores a funcTrabajo y factorFC
+    let dni=17853813;
+    // tengo una colección de 10 iones
+    var uma=1.66e-27; // u.m.a. en kg
+    var qe=1.e-19; // carga elemental del electrón
+    const cargaIon=[ // en coulombios
+    2*qe, 3*qe, 1*qe, 1*qe, 1*qe, 1*qe, 2*qe, 2*qe, 4*qe, 4*qe
+    ];
+    const masaIon=[ // en kg
+    9.012*uma,  10.811*uma, 2.014*uma, 3.016*uma, 6.015*uma,
+    7.016*uma, 4.003*uma, 3.016*uma, 2.000*uma, 13.003*uma
+    ];
+    let int_09=dni % 10; // de 0 a 9 porque tengo 10 iones preparados
+    qIon=cargaIon[int_09];
+    mIon=masaIon[int_09];
+    frecB=qIon*campoB/2/Math.PI/mIon/1e6; // frecuencia ciclotrón en MHz
+    frecB=frecB.toFixed(3);
+    eFinal=Math.pow(qIon*campoB*radioDes,2)/mIon/2; // en Julios
+    eFinal=eFinal*6.25e12; // en MeV
+    eInicial=(0.05+0.1*Math.random())*eFinal;
+     // con B y RD dadas, la eFinal máxima que me sale es sobre 300 MeV
+     // que, según eFinal=eInicial+nMax*qIonMin*voltMin, da nMax> 50000 !!
+} 
+
+function montarGraf(){
+	// volver todo a inicio por si no es primer uso de la gráfica
+	ocultarTodo("lienzo");
+	let varx=document.getElementById("varx").value;
+   let varY=document.getElementById("varY");
+   let cabTabla=document.getElementById("cabtabla");
+  
+	var aEle=[];
+	switch (varx) {
+	case "volt":
+	  aEle=["lvolt_de", "volt_de", "lvolt_a", "volt_a", "varY"];
+      cabTabla.innerHTML= "<pre>  volt (kV)   E<sub>final</sub> (MeV) </pre>";
+      varY.innerHTML="E<sub>final</sub> (MeV)";
+	  break;
+	case "frec":
+		 aEle=[ "lvolt", "volt", "lfrec_de", "frec_de", "lfrec_a", "frec_a", "varY"];
+         cabTabla.innerHTML= "<pre>  volt (kV)  frec (MHz)   E<sub>final</sub> (MeV) </pre>";
+         varY.innerHTML="E<sub>final</sub> (MeV)";
+        break;
+    case "pases":
+		 aEle=["lvolt", "volt", "varY"];
+       cabTabla.innerHTML= "<pre>  volt (kV)  n (adim)   E<sub>n</sub> (MeV) </pre>";
+       varY.innerHTML="E<sub>pase</sub> (MeV)";
+	}
+	for (let i = 0; i < aEle.length; i++)
+	  	document.getElementById(aEle[i]).style.visibility="visible";
+}
+
+function ocultarTodo(lienzo) {
+	var aEle=[];
+	aEle=[ "lvolt", "volt", "lvolt_de", "volt_de", "lvolt_a", "volt_a", "lfrec_de", "frec_de", "lfrec_a", "frec_a","varY"];
+	for (let i = 0; i < aEle.length; i++)
+	  	document.getElementById(aEle[i]).style.visibility="hidden";
+}
+
+function medir()  {
+	let varx=document.getElementById("varx").value;
+	var tabla=document.getElementById("tabla");
+	var lienzo=document.getElementById("lienzo");
+	var linea="";
+	var varY;
+	var incr;
+	var volt, pases;
+	var arrayX=[], arrayY=[];
+	switch (varx) {
+	case "volt":
+		var volt_de=document.getElementById("volt_de").value;
+		if (volt_de.length == 0)  return
+		else volt_de = +volt_de; // de kV en el cuadro input a V
+		if (volt_de < voltMin || volt_de > voltMax) alert("'volt de' está fuera de rango");
+		var volt_a=document.getElementById("volt_a").value;
+		if (volt_a.length == 0)  return
+		else volt_a = +volt_a; // de kV en el cuadro input a V
+		if (volt_a < voltMin || volt_a > voltMax) alert("'volt a' está fuera de rango");
+		// con "V" se puede hacer un continuo de valores, usaré 20
+		incr=(volt_a-volt_de)/20;
+        // la energía final, independiente de volt está en eFinal
+		for (let volt = volt_de; volt <= 1.0001*volt_a; volt += incr) {
+			linea=" "+volt.toFixed(3)+"      "+eFinal.toFixed(3)+"\n";
+			tabla.innerHTML+=linea;
+			arrayX.push(volt);
+			arrayY.push(eFinal);
+		}
+		break;
+	case "frec":
+		volt=document.getElementById("volt").value;
+		if (volt.length == 0)  return;
+		if (volt < voltMin || volt > voltMax) return;
+		var frec_de=document.getElementById("frec_de").value;
+		if (frec_de.length == 0)  return;
+		if (frec_de < frecMin || frec_de > frecMax) return;
+		var frec_a=document.getElementById("frec_a").value;
+		if (frec_a.length == 0)  return;
+		if (frec_a < frecMin || frec_a > frecMax) return;
+		// admito un continio de valores de frec, con límites, usaré 20
+		incr=Math.max(0.05,(frec_a-frec_de)/20);
+		for (let frec = +frec_de; frec <= 1.0001*frec_a; frec += incr) {
+		    // se testea si frec pasa por frecB
+            if ((frec>frecB) && (frec-incr < frecB)){
+               	linea="  "+(+volt).toFixed(2)+"    "+(+frecB).toFixed(3)+"    "+eFinal.toFixed(3)         +"\n";
+               arrayX.push(frecB);
+			   arrayY.push(eFinal);
+            }
+            else {
+               energiaY=Math.random()/200;
+               linea="  "+(+volt).toFixed(2)+"    "+(+frec).toFixed(3)+"    "+energiaY.toFixed(3)         +"\n";
+               arrayX.push(frec);
+			   arrayY.push(energiaY); 
+            }
+			tabla.innerHTML+=linea;
+		}
+      break;
+   case "pases":
+      var En;
+      volt=document.getElementById("volt").value;
+	   if (volt.length == 0)  return;  
+	   if (volt < voltMin || volt > voltMax) alert("volt fuera de rango");
+      // el incremento de n debe ser entero  
+      const f=(qIon/1.6e-19)*(volt*1e3)/1e6; // en MeV
+      // número entero máximo de pases antes de alcanzar radioDes
+      let N=Math.ceil((eFinal-eInicial)/f);
+      for (let n=1; n <= N; n++){
+          En=eInicial+f*n; // en MeV
+         // console.log("n, Ei, En= "+n+" "+eInicial.toFixed(3)+" "+En.toFixed(2)+"\n");
+         linea="   "+volt+"        "+n+"        "+En.toFixed(3)+"\n";
+		 tabla.innerHTML+=linea;
+		 arrayX.push(n);
+		 arrayY.push(En);
+      }
+   }
+   tabla.innerHTML+="\n"; // para separar series de medida
+   plotear(arrayX, arrayY, lienzo, color);
+}
+
+function plotear(arrayX, arrayY, lienzo, color){
+	// origen en esquina superior izqda
+	let dw=30;
+	let dh=10;
+	var ctx=lienzo.getContext('2d');
+	var wl=lienzo.width; // anchura lienzo en px
+	var hl=lienzo.height; // altura lienzo en px
+	ctx.clearRect(0,0,wl,hl);
+	ctx.fillStyle=color;
+	ctx.strokeStyle=color;
+	// extremos valores usuario
+	var xm=Math.min.apply(null,arrayX);
+	var xM=Math.max.apply(null,arrayX);
+	var ym=Math.min.apply(null,arrayY);
+	var yM=Math.max.apply(null,arrayY);
+     // aquí puede ocurrir que ym=yM
+     if (Math.abs(yM-ym)<0.01*ym) ym=0;
+	var xp, yp; // coordenadas punto en px
+	var wRect=4;
+	var hRect=4;
+	for (i=0; i<arrayX.length; i++) {
+		xp=wl/(xM-xm)*(arrayX[i]-xm); // conversión de u.u. a px en x
+		yp=(hl-2*dh)/(ym-yM)*(arrayY[i]-yM)+dh; // conversión de u.u. a px en y con dh de margen
+		ctx.fillRect(xp-wRect/2,yp-hRect/2,wRect,hRect);
+	}
+}
+
+function borrarTabla(){
+    let tabla=document.getElementById("tabla");
+     tabla.innerHTML="";
+}   
+
+</script>
+
+
+</head>
+
+
+<body  onload="init()">
+
+<h1>1. Introducción</h1>
+
+<p>Hasta mediados del siglo XX, los ciclotrones fueron los aceleradores de partículas más potentes conocidos. Incluso hoy día son ampliamente usados para producir haces para la medicina nuclear y la investigación básica. Se puede citar que todavía más de un millar de aceleradores por todo el mundo se basan en el ciclotrón, especialmente para la producción de radionuclidos en medicina nuclear. En concreto, se busca producir radioisótopos de corta vida (átomos radiactivos) para ser usados en la formación de imágenes aplicada a medicina y en investigación.</p>
+
+<p>Una de las limitaciones de los ciclotrones, que forzó su sustitución por los llamados <em>sincrotrones</em>, es que solo son aptos para acelerar partículas cargadas hasta un 10% aproximadamente de la velocidad de la luz, siendo la razón que los efectos relativistas son incompatibles con el fundamento de los ciclotrones. Por eso, las partículas apropiadas para su aceleración en un ciclotrón son las que no son demasiado ligeras, como los protones o deuterones.</p>
+
+
+<h1>2. Fundamentos</h1>
+
+<p>El ciclotrón es un acelerador de iones que trabaja en modo "circular". El proceso de aceleración tiene lugar configurando dos semicírculos metálicos huecos, llamados <em><i>dés</i></em>, separados diametralmente, como se ilustra, y sobre los que se aplica una diferencia de potencial. Un campo magnético perpendicular al campo de las <i>dés</i> fuerza a los iones a atravesar la diferencia de potencial una y otra vez.</p>
+
+<figure>
+<img style="padding-top: 10px;" src="figuras/Zyclotron.png"  width="640" alt="">
+<figcaption> <br> Fig.1. Esquema de funcionamiento de un ciclotrón.
+</figure>
+
+
+<p>Si denotamos por  q la carga de los iones, por V<sub>0</sub>  la amplitud de la diferencia de potencial, en cada pase la energía ganada será q V<sub>0</sub>, por lo que la energía cinética E<sub>n</sub> tras n pasos entre las <i>dés</i>, será:</p>
+
+<p><em style="border: 1px solid darkgreen;
+    padding: 5px;">E<sub>n</sub> = E<sub>0</sub> + n q V<sub>0</sub>  </em> &emsp; (1)</p>
+<p>siendo E<sub>0</sub>  la energía inicial de los iones a la entrada del ciclotrón.</p>
+
+<p>Una vez que el ion penetra en la región de campo, seguirá una trayectoria circular en que la fuerza centrípeta la proporciona la fuerza de Lorentz:</p>
+<p>qvB = mv<sup>2</sup>/R &emsp; (2)</p>
+<p>El tiempo que los iones invierten en recorrer una vuelta bajo el campo B será 
+T<sub>B</sub> = 2&pi;R/v, y, por (2) </p>
+<p><em style="border: 1px solid darkgreen; padding: 5px;">T<sub>B</sub> = 2 &pi; q B/m  </em> &emsp; (3)</p>
+<p>El resultado notable es que  el periodo no depende de la velocidad que los iones vayan ganando,  por eso se dice que recorren trayectorias <em>isócronas</em>. La frecuencia angular correspondiente, es decir, 2&pi;/T<sub>B</sub> se denomina <em>frecuencia ciclotrón</em>. </p>
+
+<p>Observar que para poder acelerar los iones el voltaje entre <i>dés</i> debe ir cambiando de sentido en cada semivuelta. Eso se consigue con un voltaje alterno V(t), cuya amplitud denotaremos por V<sub>0</sub>. Además, debe haber sincronía entre el movimiento de los iones y el potencial acelerador. En concreto, T<sub>V</sub> es el periodo de V(t), debe cumplirse (ver figura): </p>
+<p><em style="border: 1px solid darkgreen; padding: 5px;"> T<sub>V</sub> = T<sub>B</sub> </em> &emsp; (4)
+</p>
+
+<figure>
+<img src="figuras/Resonancia_ciclotron1.png"  width="872" alt="">
+<figcaption> <br> Fig.2. Esquema de funcionamiento de un ciclotrón en que el periodo del potencial acelerador está perfectamente sincronizado con el movimiento de los iones.
+</figure>
+<p>Si no se da esta sincronía, que se denomina <em>resonancia</em>, habrá un desfase progresivo entre el movimiento de los iones y el potencial alterno, que puede dar lugar a que el campo eléctrico empiece a frenar los iones y entonces se frustra la ganancia de energía (cfr. figura adjunta en que el campo al paso n-ésimo es opuesto al necesario para acelerar los iones).</p>
+<figure>
+<img src="figuras/Resonancia_ciclotron2.png"  width="872" alt="">
+<figcaption> <br> Fig.3. Aceleración frustrada por falta de sincronía. El campo eléctrico se ha ido desfasando y en el pase n-ésimo (derecha de la figura) ya se opone al movimiento.
+</figure>
+
+<h2>Cifra de mérito</h2>
+<p>La magnitud más importante en el ciclotrón es la energía final E<sub>f</sub> o velocidad final v<sub>f</sub> con que salen los iones de las <i>dés</i>. Su cálculo es tan sencillo como particularizar la ecuación (2) al radio de trayectoria máximo, que será el radio físico de las <i>dés</i>, R<sub>D</sub>. Así, de (2): qB=mv<sub>f</sub>/R<sub>D</sub>, de donde:</p>
+
+<p><em style="border: 1px solid darkgreen; padding: 5px;"> E<sub>f</sub> = &frac12; m v<sub>f</sub>&sup2; = &frac12; q&sup2;B&sup2; R<sub>D</sub>&sup2;/m &emsp; (5)</em></p>
+
+<p>Y observamos que el tamaño de las <i>dés</i> desempeña un papel central en la energía conseguida.</p>
+
+<h2>Órdenes de magnitud</h2>
+<p>Veamos algunos números:</p>
+<p>El ciclotrón pionero de Ernest O. Lawrence de 1935, premio Nobel en 1939, era tal que:</p>
+<ul>
+<li>R<sub>D</sub> &asymp; 65 cm</li>
+<li>B = 1,6 T</li>
+<li>V<sub>0</sub> = 10000 V</li>
+<li>f = 12 MHz</li>
+</ul>
+
+<figure style="float:left;">
+<img src="figuras/Magnets-2.jpg"  width="350" alt="" >
+<figcaption> <br> Fig.4. Electroimanes de un antiguo ciclotrón.
+</figure>
+
+<p style="padding-top: 20px;">Hay que hacer notar que producir un campo magnético de esa intensidad sobre tanta área exige grandes bobinas. Así no es extraño que los electroimanes del ciclotrón mencionado pesaran sobre <b>75000 kg</b>. La foto adjunta ilustra claramente la escala en juego.</p>
+<p>Finalmente, se puede añadir que aunque los voltajes aceleradores se mueven en el rango 10<sup>4</sup>&mdash;10<sup>5</sup> voltios, la corriente iónica no suele pasar de unos miliamperios, de modo que la potencia se mueve en los 10 &mdash;100 vatios.</p>
+
+
+<h1 style="clear:both;margin-top:80px;">3. Objetivo</h1>
+<p>El objetivo de esta ePráctica es <b>determinar la naturaleza del haz de iones que son acelerados, concretamente,  la carga, la masa y la energía inicial</b> con que entran al ciclotrón.</p>
+<p>Evidentemente, esto se hará a través de la experimentación ayudado del módulo de experimentación y las indicaciones que siguen.</p>
+
+
+<h1 >4. Módulo de experimentación</h1>
+<p>El módulo de experimentación consta de un "graficador" que permite visualizar y medir la evolución de la energía que van ganando los iones, que es la magnitud medible, en función de la frecuencia del potencial acelerador, variable <i>frec</i>; de la amplitud V<sub>0</sub> del voltaje acelerador, variable <i>volt</i>; o los sucesivos pases a través de las <i>dés</i>, variable <i>pases</i>.</p>
+<p> Los resultados se muestran también numéricamente en formato tabla. La tabla es editable, lo que significa que se pueden copiar los datos para, por ejemplo, analizarlos en un entorno adecuado, como una hoja de cálculo. </p>
+
+
+<div id="ref">
+
+<canvas id="lienzo">
+</canvas>
+
+<select id="varx" onchange="montarGraf()">
+	<option value="X"> escoger </option>
+   <option value="frec"> frec  </option>
+	<option value="volt"> volt </option>	
+	<option value="pases"> pases </option>
+</select>
+
+<input type="number" id="frec" class="ocultar" value="">
+
+
+<span id="lvolt"  class="ocultar"> volt:</span>
+<input  type="number" id="volt" class="ocultar" value="">
+
+<span id="lvolt_de"  class="ocultar"> de:</span>
+<input  type="number" id="volt_de"  class="ocultar" value="">
+<span id="lvolt_a"  class="ocultar"> a:</span>
+<input  type="number" id="volt_a"  class="ocultar" value="">
+
+<span id="lfrec_de"  class="ocultar"> de:</span>
+<input  type="number" id="frec_de"  class="ocultar" value="">
+<span id="lfrec_a"  class="ocultar"> a:</span>
+<input  type="number" id="frec_a"  class="ocultar" value="">
+
+
+<span id="varY">  </span>
+
+<button  id="btn_varY" onclick="medir()">Medir</button>
+
+<div id="limites">
+Valores admisibles <br>
+de los parámetros:<br><br>
+10 &leq; <i>volt</i> (kV) &leq; 100<br>
+1 &leq; <i>frec</i> (MHz) &leq; 30 <br>
+</div>
+
+<span id="cabtabla">
+
+</span>
+
+<textarea  id="tabla" readonly="readonly" >
+</textarea>
+
+<button id="btn_borrar" onclick="borrarTabla()">Limpiar</button>
+ 
+</div>
+
+
+<h1 style="clear:both;margin-top:80px;">5. Ejecución de la ePráctica</h1>
+
+<h2>Tarea 1. Encontrar el periodo del movimiento de los iones</h2>
+
+<p>Observar que tenemos control sobre el voltaje aplicado entre las <i>dés</i>. En particular, si recordamos la discusión sobre la sincronización, podemos ir variando la frecuencia del voltaje aplicado (variable <i>frec</i>) esperando que cuando esta coincida con la del movimiento circular de los iones, la respuesta sea más fuerte. Por tanto, empezamos por:</p>
+
+<p><em> &bull; Barrer V(t) en frecuencia, variable <i>frec</i>, en todo el rango, fijando una amplitud del potencial baja, por ejemplo <i>volt</i>=10, que serán kV. </em></p>
+
+<p>En la tabla de salida de datos, se observará que hay un valor de <i>frec</i> para el que la energía final, E<sub>f</sub>, es, con mucha diferencia, máxima (tanto es así, que incluso tomando un rango "fino" de frec, sigue observándose un pico muy preciso). De este valor obtendremos el periodo del potencial T<sub>V</sub>. Este será también el periodo del movimiento de los iones T<sub>B</sub>. Anotar los valores de  T<sub>B</sub> y de E<sub>f</sub> </p>
+
+<p><em  class="preg">¿Qué información podemos obtener de aplicar la ecuación (4) al valor T<sub>B</sub> experimental ?</em> </p>
+<p><em   class="preg">¿Qué información podemos obtener de aplicar la ecuación (5) a  la energía final E<sub>f</sub> que acabamos de conocer experimentalmente ?</em> </p>
+
+<p><em> &bull;Repetir la medida anterior usando un valor alto de la amplitud del potencial, por ejemplo <i>volt</i>=100, que serán kV.</em></p>
+
+<p><i>La sorpresa debe venir de que da igual usar un potencial acelerador u otro, dado que la energía final alcanzada es la misma.</i>  Por un lado, eso es compatible con (5) donde no aparece el potencial aplicado. Pero por otro lado, en cada pase entre <i>dés</i> la energía ganada es, según (1), qV<sub>0</sub>. ¿Cómo se entiende esto?</p>
+
+<h2>Tarea 2. Entender el papel del voltaje acelerador</h2>
+<p>Acabamos de decir que según medidas enteriores la energía final alcanzada por el haz de iones no depende del voltaje acelerador. Como parece contradictorio, vamos a verificarlo:</p>
+<p><em>&bull; Medir la energía final en función del voltaje acelerador, usando  <i>volt</i> en el módulo de experimentación,  cubriendo todo el rango de valores.</em></p>
+<p>Se verificará así explicitamente que E<sub>f</sub> no depende de la amplitud  V<sub>0</sub>. </p>
+
+<p>Vamos a "diseccionar" cómo se va ganando energía en cada vuelta. Para ello:</p>
+
+<p><em>&bull; Medir la energía E<sub>n</sub> al cabo del pase n-ésimo entre <i>dés</i> tomando <i>pases</i> para la variable x en el módulo de experimentación. </em>Fijar como parámetro un valor de <i>volt</i> bajo, por ejemplo 10.</p>
+
+<p>Anotar la última línea de la tabla, es decir, el número de pases realizados, que podemos llamar N,  y la energía correspondiente E<sub>f</sub>.</p>
+
+<p><em>&bull; Rehacer la medida, ahora con un valor alto de la amplitud del potencial, digamos, <i>volt</i>=100. </em>Anotar de nuevo  la última línea de la tabla.</p>
+
+<p>Comparando ambas líneas, en concreto los valores de la diferencia de potencial frente a los pases entre <i>dés</i> realizados N, <em   class="preg">¿por qué el valor de V<sub>0</sub> no es determinante para la energía final ?</em> </p>
+
+<p>Tomar ahora las primeras líneas de la última tabla. La relación entre la energía al cabo del pase n-ésimo E<sub>n</sub> y n deben seguir la relación lineal descrita en la ecuación (1). En consecuencia, con los datos de la tabla, sea gráfica o analíticamente, <em class="preg">se obtendrá la pendiente y término independiente de esa relación y, por comparación con (1), se determinará la energía inicial E<sub>0</sub> del haz de iones, así como la carga de los mismos</em>.</p>
+
+<p style="font-weight: bold;">Para rematar, unir estos resultados con los obtenidos sobre la frecuencia ciclotrón para escribir los valores de q, m y E<sub>0</sub> de los iones acelerados.</p>
+
+<h1 >6. Preguntas de revisión</h1>
+<p>&bull; Sabemos que el campo magnético, a través de la fuerza de Lorentz <b>F</b><sub>m</sub> = q <b>v</b> &times; <b>B</b>, no cambia la celeridad de una carga, ya que no realiza trabajo al ser <b>F</b><sub>m</sub> &sdot; <b>v</b> = 0. </p>
+<p>Entonces, <em class="preg">¿por qué el campo magnético <b>B</b> es tan importante, como se expresa en la ecuación (5), en la energía final E<sub>f</sub> alcanzada en el ciclotrón? </em></p>
+
+<p>&bull; Considerar un voltaje alterno V(t) = V<sub>0</sub> cos (<sup>2&pi;</sup>/<sub>T</sub> t), siendo T su periodo. En t = 0, V es máximo, igual a la amplitud V<sub>0</sub>. En un tiempo t<sub>1</sub> = T+&epsilon;, con el desfase &epsilon; << T, V será positivo y <i>casi</i> máximo pues T+&epsilon; es solo <i>casi</i> un periodo. En un tiempo t<sub>2</sub> = 2(T+&epsilon;) V será aún positivo pero menor que antes. Etcétera. <em class="preg">¿Al cabo de qué tiempo t<sub>n</sub> = n(T+&epsilon;) el voltaje V empieza a ser negativo?</em> <br>
+Si n = 500, <em class="preg"> ¿cuál sería entonces el valor de &epsilon;? ¿Tiene esto relación con alguno de los resultados anteriores?</em></p>
+
+<p>&bull; Se dice que los ciclotrones no funcionan cuando la velocidad de las partículas es alta. Ahora debemos tener claro que los ciclotrones funcionan debido a que, al ser las trayectorias de los iones <i>isócronas</i>, cabe "sincronizarlas" con un potencial acelerador alterno, como se expresa en la ecuación (4). <em class="preg">De lo que sabes de la relatividad restringida ¿qué puede hacer que esa sincronización falle?</em></p>
+
+
+
+
+
+
+</body>
+</html>

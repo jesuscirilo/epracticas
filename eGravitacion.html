@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+</head>
+<style type="text/css">
+
+body {
+   width: 920px;
+	margin: 0px auto;
+	text-align: justify;
+	padding-left:0px;
+	padding-right:0px;
+	color:darkslategray;
+	font-family:Cambria;
+    // otras fonts: Calibri, Arial, Times, Verdana, Optima, Cambria
+	font-size: large;
+}
+
+p {
+    margin-left: 60px;
+    width: 75%;
+}
+
+h1 {
+    color:darkgreen;
+	padding-bottom:0px;
+	text-align: center;
+}
+
+h2 {
+	color:darkgreen;
+	padding-top:40px;
+	text-align: center;
+    font-weight: bolder;
+}
+
+h3 {
+	color:darkgreen;
+	padding-top:40px;
+	text-align: center;
+   }
+
+a {
+   color:gray;
+   margin-right: 10px;
+   }
+
+li{
+   margin-right: 200px;
+   margin-top:10px;
+}
+span{
+   color:DarkRed;
+}
+
+em{
+   color:darkgreen;
+}
+
+em.preg{
+   background-color:  LightYellow;
+   font-style: normal;
+}
+
+#interact {
+    width: 950px;
+	font-size: 0.9em;
+}
+/* Clear floats after the columns */
+#interact:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+/* Create two unequal columns that floats next to each other */
+#controles {
+  float: left;
+  padding: 0px;
+  width: 400px;
+}
+
+.iniciales {
+    color: red;
+    //font-size: 14pt;
+}
+
+textarea {
+    overflow: scroll;
+    width: 395px;
+    height: 270px; 
+    //border: 1px dotted; 
+    font-size:13px;
+}
+#div_lienzo {
+  float: left;
+  position: relative;
+  width:550px;
+  height:530px;
+}
+
+#mi_lienzo{
+	position: absolute;
+    top:50px;
+    left:0px;
+    border: 1px dotted;
+}
+
+td{
+	padding:5px;
+	text-align: right;
+}
+
+th{
+	text-align: center;
+}
+
+input{
+	width:40px;
+    font-size: 13px;
+}
+
+
+/* hide arrows
+ Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+button {
+  border: none;
+  color: white;
+  padding: 4px 4px;
+  margin-right:5px;
+  text-align: right;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: CadetBlue; 
+}
+
+
+button:hover{
+	background-color: Blue;
+}
+
+#button:active{
+	transform: translateY(3px);
+}
+
+.entradaActual{
+color:blue;
+}
+
+.entradaAnterior{
+color: grey;
+}
+
+strong{
+color:darkred;
+}
+
+em {
+font-style: normal;
+font-weight: bold;
+}
+</style>
+
+<script type="text/javascript">
+// ************************ globales **************************
+// el radio del Planeta y su masa serán los dos únicos parámetros ligados al planeta
+var radioPlaneta; // 6371000 m sería el radio de la Tierra
+var masaPlaneta; // 5.972e24 en  kg, si se tratara de la Tierra
+const G=6.674e-11; // constante de gravitación universal en Nm2/kg2
+var cRadialMaxAbs;  // alejamiento máximo en m desde superficie
+var aPtosOrbitaActual=[]; // array que contendrá los puntos de la órbita en unidades relativas
+var aPtosOrbitaAnterior=[]; // array que contendrá los puntos de la órbita anterior  en unidades relativas
+var aPtosLienzoActual=[]; // array que contendrá los puntos de la órbita para el canvas en px
+var aPtosLienzoAnterior=[]; // array que contendrá los puntos de la órbita anterior para el canvas en px
+  // declaramos variables lienzo;
+var lienzo, ctx;
+var anchoLienzo, altoLienzo;
+var imgPlaneta=new Image();
+imgPlaneta.src="figuras/planeta.png"; // 314x313 px
+var cohete=new Image();
+cohete.src="figuras/cohete.png"; // 15x34 px
+var imgExplosion=new Image();
+imgExplosion.src="figuras/explosion.png" // 30x30 px
+var cRadialReducida1="";
+var velocidad1="";
+var angVeloRadio1="";
+var angPolar1="";
+var factorConversor1;
+//
+// ************************ funciones **************************
+//
+function init() {
+   generarIncognitas();
+   lienzo = document.getElementById("mi_lienzo");
+	  if (!lienzo || !lienzo.getContext){
+		window.alert("Problemas de compatibilidad del navegador con el elemento 'canvas'");
+		window.stop();
+	 }
+   ctx = lienzo.getContext("2d");
+   anchoLienzo=lienzo.width;
+   altoLienzo=lienzo.height;
+}
+function generarIncognitas() {
+    // extraer dni
+    var cad=window.location.search;
+    if (cad && cad.indexOf('undefined')== -1)
+        var dni=cad.substring(cad.indexOf('=')+1,cad.length);
+    else
+        window.location.href="index.html";
+// asignar valores a R y M
+    let Mmin=3.9E+22;
+    let Mmax=9.3E+24;
+    let Rmin=5.3E+4; // en m
+    let Rmax=3.5E+7; // en m
+    let int_010=dni % 11 // de 0 a 10
+    masaPlaneta=Mmin+int_010*(Mmax-Mmin)/10.0; // eso da entre Mmin y Mmax
+    radioPlaneta=Rmin+int_010*(Rmax-Rmin)/10.0; // // eso da entre Rmin y Rmax
+    console.log("M, R= "+ masaPlaneta+"   "+radioPlaneta);
+    cRadialMaxAbs=+100*radioPlaneta;
+}
+
+function leerParamsIniciales() {
+    // paso los params inicales a registro antes de que se actualicen
+       // pasar parámetros de órbita a registro-recordatorio
+   document.getElementById("cRadialReducida2").setAttribute('readonly',false);
+   document.getElementById("cRadialReducida2").value=cRadialReducida1;
+   document.getElementById("cRadialReducida2").setAttribute('readonly',true);
+   document.getElementById("velocidad2").setAttribute('readonly',false);
+   document.getElementById("velocidad2").value=velocidad1;
+   document.getElementById("velocidad2").setAttribute('readonly',true);
+   document.getElementById("angVeloRadio2").setAttribute('readonly',false);
+   document.getElementById("angVeloRadio2").value=angVeloRadio1;
+   document.getElementById("angVeloRadio2").setAttribute('readonly',true);
+   document.getElementById("angPolar2").setAttribute('readonly',false);
+   document.getElementById("angPolar2").value=angPolar1;
+   document.getElementById("angPolar2").setAttribute('readonly',true);
+// leemos primero parámetros de órbita establecidos por usuario
+   let cRadialReducida0=parseFloat(document.getElementById("cRadialReducida").value)*1000; // conversión a m
+	if (cRadialReducida0>cRadialMaxAbs) {
+    	window.alert("Coordenada radial fuera de rango.");
+       	return;
+   	}
+   let celeridad0=parseFloat(document.getElementById("velocidad").value)*1000; // conversion a m/s
+   let angVeloRadio0=parseFloat(document.getElementById("angVeloRadio").value);
+    if (angVeloRadio0<0 || angVeloRadio0>180) {
+    	window.alert("Ángulo β fuera de rango.");
+       	return;
+   	}
+   let angPolar0=parseFloat(document.getElementById("angPolar").value);
+   // guardar estos valores
+  cRadialReducida1=cRadialReducida0;
+  velocidad1=celeridad0;
+  angVeloRadio1=angVeloRadio0;
+  angPolar1=angPolar0;
+   // una vez leídos llamamos a la función que calcula la órbita
+   calcularOrbita(cRadialReducida0, celeridad0, angVeloRadio0,  angPolar0 ) ;
+}
+//
+//--------------------------------- calcular órbita ----------------------------------------
+function calcularOrbita(cRadialReducida0, celeridad0, angVeloRadio0,  angPolar0 ) {
+    // todo debe entrar en SI (salvo los grados de β y θ)
+   aPtosOrbitaActual.length=0;
+   aPtosLienzoActual.length=0;
+   const parGravitacional=G*masaPlaneta;
+   const numPtosOrbita=250;  // número puntos calculados por órbita
+   var cRadialInicial=cRadialReducida0+radioPlaneta; // referencia al centro
+   var factorConversor;
+   var cRadialMaxOrb; // máximo alejamiento para la órbita actual
+   // calculo la energía por unidad de masa, que será constante
+   var energiaEspecifica=Math.pow(celeridad0,2)/2-parGravitacional/cRadialInicial;
+   //  console.log("energiaEspecifica="+energiaEspecifica);
+   // y también el momento cinético por unidad de masa
+   var momentoAngEspecifico=cRadialInicial*celeridad0*Math.sin(angVeloRadio0/180.0*Math.PI);
+   var preFactor=parGravitacional/Math.pow(momentoAngEspecifico,2);
+   // la siguiente excentricidad se toma de la fórmula de la órbita:
+   //  1/r=preFactor*(1+excentricidad*Math.cos(angPolar-constPolar));
+   var excentricidad=Math.sqrt(1+2*energiaEspecifica*Math.pow(momentoAngEspecifico,2)/Math.pow(parGravitacional,2));
+   // ahora debo calcular la cte de integración constPolar
+   // a partir de la ecuación de la órbita y las condiciones iniciales
+   // Obligaremos sin pérdida de generalidad a que inicialmente angPolar=0
+   // lo siguiente es importante para evitar anomalías como que
+    // num valga 1.0000000000002  que da error en Math.acos(num)
+   let num=+((1/cRadialInicial/preFactor-1)/excentricidad).toFixed(3);
+   var constPolar=-Math.acos(num);
+   // hay doble solución; javascript, para acos() devuelve un valor entre 0 y π
+   //  por tanto constPolar estará entre 0 y - π
+   // como dr/dθ  es proporcional a - sen(constPolar) , entonces
+   // si β está entre 0 y 90º , dr/dθ   deberá ser positivo =>  no hacer nada
+   //  si β está entre 90º y 180º , dr/dθ   deberá ser negativo =>  cambiarle el signo a constPolar
+   if  (angVeloRadio0>90  && angVeloRadio0<=180 ) constPolar*=-1;
+   // generar variables para contener los puntos de la órbita
+   var celeridad=celeridad0;
+   var cRadial=cRadialInicial;
+   var angVeloRadio=angVeloRadio0/180.0*Math.PI;
+   var angPolar=0.0;
+   var incrCoorRadial; // paso en distancia entre puntos que se grabarán
+   //
+   // bucle de la órbita; hay que diferenciar las órbitas degeneradas: angPolar=constante
+   switch (+angVeloRadio0){
+   // --------------------------lanzamiento hacia arriba-----------------------------------
+   case 0:
+    // altura máxima alcanzable:
+    if (energiaEspecifica<0) cRadialMaxOrb=-parGravitacional/energiaEspecifica
+    else cRadialMaxOrb=Number.MAX_VALUE;
+   	if (cRadialMaxOrb>cRadialMaxAbs) {
+    	window.alert("Órbita fuera de rango. Bajar velocidad inicial");
+       	return;
+   	}
+      factorConversor=(anchoLienzo/2)/(cRadialMaxOrb*1.05); // conversor de metros a píxeles
+   	incrCoorRadial=((cRadialMaxOrb-cRadialInicial)+(cRadialMaxOrb-radioPlaneta))/numPtosOrbita; // distancia total recorrida dividida en numPtosOrbita pasos
+   	var direc=+1; // marcará si estamos bajando o subiendo
+
+   	while (cRadial<=cRadialMaxOrb && cRadial>=radioPlaneta) {
+        celeridad=Math.sqrt(2*(energiaEspecifica+parGravitacional/cRadial));
+   		aPtosOrbitaActual.push(new ptoOrbita(cRadial,angPolar, celeridad, angVeloRadio)); // siempre estará el pto inicial
+   		aPtosLienzoActual.push(new ptoLienzo(anchoLienzo/2+factorConversor*cRadial*Math.cos(angPolar), altoLienzo/2-factorConversor*cRadial*Math.sin(angPolar)));
+   		
+   		cRadial+=direc*incrCoorRadial;
+   		if (cRadial>cRadialMaxOrb) {
+   			cRadial=cRadialMaxOrb; // pto álgido en que velo=0
+   			direc=-1;
+   		} // end if  		
+   	} // end while
+   	break;
+       // ---------------------------lanzamiento hacia abajo------------------------------
+   case 180:
+      cRadialMaxOrb=cRadialInicial;
+      factorConversor=(anchoLienzo/2)/(cRadialMaxOrb*1.05); // conversor de metros a píxeles
+   	incrCoorRadial=(cRadialInicial-radioPlaneta)/numPtosOrbita; // distancia total recorrida dividida en numPtosOrbita pasos
+     while (1) {
+   		aPtosOrbitaActual.push(new ptoOrbita(cRadial,angPolar, celeridad, angVeloRadio)); // siempre estará el pto inicial
+         aPtosLienzoActual.push(new ptoLienzo(anchoLienzo/2+factorConversor*cRadial*Math.cos(angPolar), altoLienzo/2-factorConversor*cRadial*Math.sin(angPolar)));
+         if (cRadial<=radioPlaneta) break;
+   		cRadial-=incrCoorRadial;
+   		celeridad=Math.sqrt(2*(energiaEspecifica+parGravitacional/cRadial));
+   	} // end while
+   break;
+     // ------------------------------lanzamiento en órbita------------------------------------
+   default: // órbita no degenerada
+   	 var incrAngPolar=2*Math.PI/numPtosOrbita;
+   	 if (energiaEspecifica<0)  cRadialMaxOrb=1.02/(preFactor*(1-excentricidad)); // para órbitas cerradas
+   	 else cRadialMaxOrb=cRadialMaxAbs;  // órbitas abiertas
+    // console.log("cRadialMaxOrb(km)="+cRadialMaxOrb/1000);
+   	 if (cRadialMaxOrb>cRadialMaxAbs) {
+		    window.alert("Órbita fuera de rango. Modificar parámetros");
+	   	 return;
+   	 }
+   	factorConversor=anchoLienzo/2/cRadialMaxOrb; // conversor de metros a píxeles
+     while (cRadial<=cRadialMaxOrb)  {
+      aPtosOrbitaActual.push(new ptoOrbita(cRadial,angPolar, celeridad, angVeloRadio)); // siempre estará el pto inicial
+	 //console.log("cRadial,angPolar, celeridad, angVeloRadio="+cRadial+" "+angPolar+" "+celeridad+" "+angVeloRadio);
+     aPtosLienzoActual.push(new ptoLienzo(anchoLienzo/2+factorConversor*cRadial*Math.cos(angPolar), altoLienzo/2-factorConversor*cRadial*Math.sin(angPolar)));
+      if (cRadial<radioPlaneta) break;
+       angPolar+=incrAngPolar;
+      if (angPolar>2*Math.PI) break; // salir si vuelta entera
+       // nueva cRadial al cabo de angPolar
+       cRadial=1/(preFactor*(1+excentricidad*Math.cos(angPolar-constPolar)));
+       // ahora recalculo v para siguiente etapa a partir de la energía  especifica
+       celeridad=Math.sqrt(2*(energiaEspecifica+parGravitacional/cRadial));
+       // y el nuevo angVeloRadio a partir de momentoAngEspecifico
+       angVeloRadio=Math.asin(momentoAngEspecifico/cRadial/celeridad);
+      } // end while
+   }// end switch
+
+   // listar ptos de la órbita en textarea
+  	listarOrbita();
+
+  // graficaciones
+    graficarOrbitas(factorConversor);
+
+   // pasar array actual de órbita a array anterior para liberar el actual
+   aPtosOrbitaAnterior=aPtosOrbitaActual.slice();
+   aPtosLienzoAnterior=aPtosLienzoActual.slice();
+
+} // fin function calcularOrbita()
+// ------------------------------- listar posiciones sucesivas satélite  --------------------------------
+function listarOrbita() {
+
+   let tabla=document.getElementById("tabla");
+   let linea="";
+   for (let i=0;i<aPtosOrbitaActual.length;i++) {
+        linea ="   "+ i+"    " + formatear(aPtosOrbitaActual[i].cRadialReducida)+ "     "+ formatear(aPtosOrbitaActual [i].velokms) + "     "+ formatear(aPtosOrbitaActual[i].angVeloRadio) + "    " + formatear(aPtosOrbitaActual[i].angPolar)+ "\n"; 
+        tabla.innerHTML+=linea;
+    };
+    tabla.innerHTML+="\n"; // para separar series de medida
+}
+
+//------------------------------------ graficar órbita ---------------------------------------------
+function graficarOrbitas(factorConversor) {
+   ctx.clearRect(0,0, anchoLienzo,altoLienzo);
+   // graficar cohete en el ángulo de salida adecuado
+   ctx.save();
+   ctx.translate(aPtosLienzoActual[0].xPx, aPtosLienzoActual[0].yPx);
+   ctx.rotate(-(aPtosOrbitaActual[0].angVeloRadio-90)*Math.PI/180.0);
+   ctx.drawImage(cohete, -cohete.width/2, -cohete.height/2);
+   ctx.restore();
+   let radioPlanetaPx=parseInt(radioPlaneta*factorConversor);
+    //console.log("radioPlanetaPx= "+radioPlanetaPx);
+   ctx.drawImage(imgPlaneta, anchoLienzo/2-radioPlanetaPx, altoLienzo/2-radioPlanetaPx,   2*radioPlanetaPx, 2*radioPlanetaPx);
+  ctx.lineWidth = "3";
+  ctx.setLineDash([3,5]);
+      // plotear órbita actual
+      ctx.beginPath();
+      ctx.strokeStyle="blue";
+      ctx.moveTo(aPtosLienzoActual[0].xPx, aPtosLienzoActual[0].yPx);
+      for (var i=1; i<aPtosLienzoActual.length; i++)   ctx.lineTo(aPtosLienzoActual[i].xPx,aPtosLienzoActual[i].yPx);
+      ctx.stroke();
+      // si el cohete ha chocado contra el planeta, dibujar la explosión
+    if(aPtosOrbitaActual[i-1].cRadialReducida<=0)  ctx.drawImage(imgExplosion,aPtosLienzoActual[i-1].xPx-imgExplosion.width/2, aPtosLienzoActual[i-1].yPx-imgExplosion.height/2);
+      // y órbita anterior, si existe
+    if (aPtosLienzoAnterior.length) {
+
+        if (Math.abs((factorConversor - factorConversor1)/factorConversor )> 0.01) {  // ha cambiado la escala
+            // por eso  hay que rehacer aPtosLienzoAnterior
+             let num=factorConversor/factorConversor1;
+             for (let i=0;i<aPtosLienzoAnterior.length;i++) {
+                aPtosLienzoAnterior[i].xPx=parseInt(anchoLienzo/2+(aPtosLienzoAnterior[i].xPx-anchoLienzo/2)*num);
+                aPtosLienzoAnterior[i].yPx=parseInt(altoLienzo/2+(aPtosLienzoAnterior[i].yPx-altoLienzo/2)*num);
+             }
+        }
+        ctx.beginPath();
+        ctx.strokeStyle="gray";
+        ctx.moveTo(aPtosLienzoAnterior[0].xPx, aPtosLienzoAnterior[0].yPx);
+        for (var i=1; i<aPtosLienzoAnterior.length; i++)   ctx.lineTo(aPtosLienzoAnterior[i].xPx,aPtosLienzoAnterior[i].yPx);
+        ctx.stroke();
+         // si el cohete había chocado contra el planeta, dibujar la explosión
+       if(aPtosOrbitaAnterior[i-1].cRadialReducida<=0)  ctx.drawImage(imgExplosion,aPtosLienzoAnterior[i-1].xPx-imgExplosion.width/2, aPtosLienzoAnterior[i-1].yPx-imgExplosion.height/2);
+    }
+      // guardo el factoConversor para el próximo ploteo
+    factorConversor1=factorConversor;
+} // end graficarOrbitas()
+
+// constructor de los puntos de la órbita
+function ptoOrbita(cRadial0,angPolar0, celeridad0, angVeloRadio0) {
+   this.cRadialReducida=((cRadial0-radioPlaneta)/1000).toFixed(1);
+   this.angPolar=(angPolar0/Math.PI*180.0).toFixed(2);
+   this.velokms=(celeridad0/1000.0).toFixed(3);
+   this.angVeloRadio=(angVeloRadio0/Math.PI*180.0).toFixed(2);
+}
+ // constructor de los puntos canvas en px
+ function ptoLienzo(x0, y0){
+    this.xPx=parseInt(x0);  // entero por ser px
+    this.yPx=parseInt(y0);  // entero por ser px
+ }
+
+function formatear(cadNum){
+    return cadNum.replace(".",",");
+}
+
+function borrarTabla(){
+    let tabla=document.getElementById("tabla");
+     tabla.innerHTML="";
+}      
+
+</script>
+
+
+<body onload="init()">
+
+<h1>ÓRBITAS GRAVITATORIAS</h1>
+
+<h2>1. Las leyes de Kepler</h2>
+
+<p>Johannes Kepler (1571-1630) fue el astrónomo alemán que estableció las leyes que describen las órbitas elípticas de la Tierra y otros planetas alrededor del Sol. Esto lo pudo conseguir gracias a los miles de datos
+astronómicos recopilados por el astrónomo danés Tycho Brahe (1546-1601).</p>
+
+
+<p>Aunque resultó muy satisfactorio encontrar tales leyes, Kepler nunca consiguió comprender el sentido último de las mismas. Posteriormente, con el desarrollo de la teoría de Newton de la Mecánica y la Ley de la Gravitación Universal, las leyes de Kepler se pudieron interpretar como un resultado natural de la interacción entre el Sol y cada planeta.</p>
+
+<h3>Primera ley (1609)</h3>
+
+<p><cite>Todos los planetas se desplazan alrededor del Sol describiendo órbitas elípticas. El Sol se encuentra en uno de los focos de la elipse.</cite></p>
+<img src="figuras/elipse_planetaria.png" style="float:left; margin-right:20px;" alt="">
+<p>En la figura adjunta se muestran los elementos básicos de una elipse: los focos (dos), el centro y los semiejes a,b. La posición de los focos respecto  del centro  determina la desviación respecto a un círculo, esto es, la <em>excentricidad e</em>. Así, cuando los dos focos se confunden con el centro estamos en un círculo. La órbita de la Tierra en particular tiene solo una pequeña excentricidad de 0.017.</p>
+
+
+<h3>Segunda ley (1609)</h3>
+<p><cite>El radio vector que une un planeta y el Sol recorre áreas iguales en tiempos iguales.</cite></p>
+<img src="figuras/velocidad_aerolar.png"  style="float:left;margin-right:20px;" alt="">
+<p>Esta ley nos dice que la velocidad de giro alrededor del Sol no es uniforme sino que cuando el planeta está más alejado del Sol su velocidad es menor que cuando está más cercano al Sol.</p>
+
+<p>La ley de las áreas es deducible directamente de la constancia del momento angular.</p>
+
+<p>El afelio y el perihelio son los dos únicos puntos de la órbita en los que el radio vector y la velocidad son perpendiculares. Por ello solo en esos 2 puntos el módulo del momento angular, L, se puede calcular directamente como el producto de la masa del planeta por su velocidad y su distancia al centro del Sol.</p>
+<p>L= m &sdot; r &sdot; v &sdot; sen 90&ordm;</p>
+
+<h3>Tercera ley (1619)</h3>
+<p><cite>Para cualquier planeta, el cuadrado de su período orbital, T,  es directamente proporcional al cubo de la longitud del semieje mayor, a, de su órbita elíptica, es decir:</cite></p>
+<p>T<sup>2</sup> = const a<sup>3</sup></p>
+
+En estas ePrácticas trataremos el manejo experimental (virtual) y numérico de la primera y segunda ley.
+
+<h2>2. Módulo de experimentación </h2>
+<p>El módulo de experimentación consta de tres paneles. </p>
+<p>El primero, superior izquierdo, es el <strong>panel de mandos</strong> donde el usuario especifica los parámetros iniciales que determinarán una órbita, que podrá ser abierta o cerrada.</p>
+<p>El panel inferior izquierdo, <strong>listado de coordenadas</strong>, que mostrará las sucesivas posiciones del satélite a lo largo de la órbita, en particular  la coordenada radial, celeridad (módulo de la velocidad) y posición angular a través del ángulo polar &theta;.
+Dicha tabla habrá de ser  consultada para responder a las preguntas que serán formuladas en el apartado siguiente.</p>
+<p>En el panel derecho se sitúa un <strong>lienzo</strong> sobre el que se dibujarán  las formas de las órbitas. Son las órbitas que realizaría un satélite alrededor de un planeta, que no necesariamente será la Tierra. </p>
+
+<div id="interact">
+<div id="controles" style="background-color:white;">
+<table style="border: 1px dotted; width:100%;">
+<caption style="font-size:larger;"><strong>Valores iniciales de órbita</strong></caption>
+  <tr>
+   <td> <img src="figuras/coord_satelite.png" width="122" height="90" alt=""></td>
+   <td>      <span class="iniciales">r<sub>i</sub> (km) <br> &lsim;10<sup>5</sup>  </span>  </td>
+    <td>     <span class="iniciales"> v<sub>i</sub> <br> (km/s)  </span> </td>
+    <td>
+     <span class="iniciales"> &beta;<sub>i</sub> (&deg;) <br>  &le; 180 </span>
+    </td>
+	 <td>
+      <span class="iniciales">&theta;<sub>i</sub> (&deg;) <br>  fijo a 0 </span>
+    </td>
+  </tr>
+
+  <tr>
+  <td>     actual:    </td>
+   <td>
+      <input  type="number" id="cRadialReducida" style="width:50px;"   class="entradaActual" value=1000>
+   </td>
+    <td>
+      <input type="number" id="velocidad" style="width:40px;"   class="entradaActual"  value=8>
+   </td>
+    <td>
+      <input type="number" id="angVeloRadio" style="width:30px;"  class="entradaActual"  value=90.0>
+    </td>
+	 <td>
+      <input type="number" id="angPolar" style="width:30px;"  class="entradaActual"  value=0.0  readonly="readonly">
+    </td>
+  </tr>
+
+  <tr>
+  <td>       anterior:    </td>
+   <td>
+      <input  type="number" id="cRadialReducida2" style="width:50px;"   class="entradaAnterior">
+   </td>
+    <td>
+      <input type="number" id="velocidad2" style="width:40px;"   class="entradaAnterior">
+   </td>
+    <td>
+      <input type="number" id="angVeloRadio2" style="width:30px;"   class="entradaAnterior">
+    </td>
+	 <td>
+      <input type="number" id="angPolar2" style="width:30px;"   value=0.0 class="entradaAnterior">
+    </td>
+  </tr>
+
+<tr>
+<td colspan="5">
+  <button id="btn_lanzar_cohete" onclick="leerParamsIniciales()">Lanzar cohete</button>
+</td>
+</tr>
+<br><br>
+  <tr >
+
+ <td>  <button id="btn_borrar_tabla" onclick="borrarTabla()">Borrar</button> &emsp; r (km) </td>
+<td> v (km/s)</td>
+<td> &beta; (&deg;)  </td>
+<td> &theta; (&deg;)</td>
+<td>  </td>
+</tr>
+</table>
+
+<textarea  id="tabla" readonly="readonly">
+</textarea>
+</div>
+
+  <div id="div_lienzo" style="background-color:white;">
+   <canvas id="mi_lienzo" width="530" height="530"> </canvas>
+  </div>
+
+ </div>
+ <br>
+<p> Los  parámetros básicos cinéticos de la órbita los fija el usuario. Estos son:</p>
+<ul>
+<li> Posición inicial </li>
+<li>Velocidad inicial</li>
+</ul>
+<p>En cuanto a la posición, dado que el planeta lo admitimos esférico, no importaría desde qué posición angular lanzamos el satélite. Es por eso que todas las órbitas empiezan en la misma posición angular (ángulo polar &theta;, ver diagrama del módulo de experimentación) que tomamos como cero. La coordenada radial inicial es fijable. Sin embargo es <em>relativa a la superficie del planeta</em> y tiene un límite aproximado de 100000 km. <strong>Hay por tanto que distinguir entre la distancia del satélite al centro del planeta, R, de la distancia desde la superficie, r</strong>. La relación entre ambas es obviamente:
+ </p>
+<p><span>R = R<sub>p</sub> + r    &emsp;  (1)</span></p>
+<p>siendo R<sub>p</sub> el radio del planeta (desconocido).</p>
+
+<p>La velocidad, como vector que es, debe especificarse con un módulo y una dirección. Haciendo referencia al diagrama del módulo de experimentación, el ángulo (externo) que forman el radio vector y el vector velocidad, denotado por &beta;, determina por completo la dirección de este último vector.</p>
+<p>Forma parte de la experimentación analizar cómo actúa un determinado parámetro sobre la forma de la órbita. Para facilitar lo cual, la aplicación muestra los dos últimos conjuntos de parámetros iniciales, así como la forma de las dos últimas órbitas. Lo natural en este sentido sería variar sólo uno de los tres parámetros manteniendo constante los otros dos, y observar el efecto de ese cambio. </p>
+<p>Las órbitas resultantes de la parametrización inicial que el usuario ha establecido, se ejecutan pulsando el botón <strong>Lanzar cohete</strong>, y se muestran de dos maneras. Cuantitativamente en la tabla numérica, la cual es editable: quiere decir que se pueden copiar los datos para transportarlos a otro entorno, como una hoja de cálculo. Y cualitativamente en el "lienzo". La órbita en azul es la correspondiente a los parámetros iniciales actuales, que también se escriben en azul, tal como se reflejan en el panel de mandos. Órbita gris, la anterior a la órbita actual, que corresponde a los parámetros iniciales en gris en el panel de mandos</p>
+<p>Respecto a las aproximaciones adoptadas, la más importante es que se desprecia cualquier tipo de rozamiento durante el transcurso de las órbitas. Se podría pensar que se trata de un planeta sin atmósfera.</p>
+<a href="#controles">ir a módulo de experimentación</a>
+
+<h2>3. Ejecución de la ePráctica</h2>
+<p>El primer objetivo, de carácter genérico, será  desarrollar un conocimiento "experimental" de las leyes planetarias. Más precisamente, se irá avanzando en este conocimiento por pasos, al ir trabajando las sucesivas tareas que se proponen.</p>
+
+<h3>Tarea 1: determinar la masa y radio del planeta</h3>
+
+El procedimiento consistirá en lo siguiente:
+<p>
+ <em>Generar órbitas circulares a distintas distancias del planeta</em>. Eso exige en primer lugar que el ángulo &beta;  entre radio y velocidad sea de 90º. Luego, colocar inicialmente el satélite a una distancia y velocidad, a discreción, del planeta e ir ajustando por tanteo la velocidad, de menos a más,  hasta que la órbita se pueda considerar circular, sin modificar la posición inicial. Para ese objetivo lo mejor es, no una apreciación visual, sino consultar el listado numérico de la órbita, verificando que las variaciones máximas de la celeridad del satélite son despreciablemente pequeñas, por ejemplo, menores de 5%.
+</p>
+<p>
+<em>Repetir el proceso anterior para distintas coordenadas radiales iniciales, al menos diez veces, que barran todas las distancias al planeta</em>, desde su radio, r &rarr; 0, hasta unos 100000 km. De este modo se obtendrá una serie de duplas:
+<span>(r<sub>1</sub>,v<sub>1</sub>), (r<sub>2</sub>,v<sub>2</sub>), (r<sub>3</sub>,v<sub>3</sub>),...</span>
+</p>
+<p>
+<em>Graficar    <sup>1</sup> &frasl;<sub>(v<sub>i</sub>)<sup>2</sup></sub> frente a r<sub>i</sub></em>.  Se deberá observar que esos 10 puntos (o los que se hayan generado en el apartado anterior) siguen una relación lineal, que escribimos como <br>
+<span> <sup>1</sup> &frasl;<sub>v<sup>2</sup></sub> = a<sub>exp</sub>&middot;r + b<sub>exp</sub>. </span><br>
+Gráfica o analíticamente, hacer una regresión lineal que nos permita determinar "experimentalmente" tanto la pendiente a<sub>exp</sub> como el término independiente b<sub>exp</sub>.
+</p>
+<p>
+Como no  puede ser casualidad esta relación lineal, habrá que  <em>escribirse las ecuaciones que gobiernan el movimiento planetario circular</em>, comprobando esa interrelación. Cuidado con  confundir la distancia R al centro del planeta con la distancia r a su superficie; revisar la ecuación (1). Se debe comprobar que en efecto se obtiene una relación lineal que podemos escribir como: <br>
+<span>1/v<sup>2</sup> = a<sub>teo</sub>&middot;r + b<sub>teo</sub></span><br>
+ donde a<sub>teo</sub> y b<sub>teo</sub> serán función de R<sub>planeta</sub> y M<sub>planeta</sub>.
+</p>
+<p>
+Finalmente, bastará identificar a<sub>teo</sub> = a<sub>exp</sub> y b<sub>teo</sub> = b<sub>exp</sub> para poder determinar el radio y masa del planeta: R<sub>p</sub> y M<sub>p</sub>.
+</p>
+<a href="#controles">ir a módulo de experimentación</a>
+
+<br><br>
+<h3>Tarea 2: verificar las constantes del movimiento</h3>
+<p>Una vez conocidos los dos parámetros "intrínsecos", R<sub>planeta</sub> y M<sub>planeta</sub>, se pide verificar que a lo largo de cualquier órbita, tanto la energía del satélite como su momento angular se mantienen constantes.</p>
+<p><em>Generar cualquier órbita</em>, sea una de las anteriores o no, circular o no, cerrada o no, con el panel de mandos del módulo de experimentación.  Sobre la tabla numérica que recoge las magnitudes cinéticas del movimiento, seleccionamos al azar algunos puntos, y sobre ellos calculamos la energía específica E<sub>e</sub> y el momento angular específico L<sub>e</sub>. Estas magnitudes no son sino las correspondientes a la unidad de masa del satélite. Es decir: <br>
+<span> E<sub>e</sub> = &frac12; v<sup>2</sup>&minus; (G &frasl; R) M<sub>planeta</sub></span><br>
+<span> L<sub>e</sub> = R v sen &beta; &emsp; (2)</span><br>
+</p>
+
+<p>Hay puntos de una órbita elíptica en que radio vector y velocidad son perpendiculares. Eso ocurre en particular en los extremos de los ejes. Si nos concretamos por ejemplo al eje mayor, tendremos el punto más alejado, <em>apoapsis</em> (apogeo cuando se trata de la Luna alrededor de la Tierra) y <em>periapsis</em> el más próximo (perigeo para la Tierra como centro). Pues bien, en estos dos puntos la conservación del momento angular (por ser &beta;=90&ordm;) exigirá que:
+<p><span>v<sub>apo</sub> &middot; R<sub>apo</sub> = v<sub>peri</sub> &middot; R<sub>peri</sub> &emsp; (3)</span></p>
+<p><em>Verificar "experimentalmente" que la ecuación (3) se cumple</em>. Previamente habrá que identificar en el listado numérico cuáles son el apoapsis y el perapsis de la órbita, para lo cual bastará identificar los extremos de  la interdistancia r. </p>
+<p>Observar que, en breve, lo que dice (3) es que el objeto que describe la órbita bajo el solo efecto de las fuerzas gravitatorias lo hace más rápido cuanto más cerca está del centro de fuerzas. Eso es lo que afirma en particular la <strong>segunda ley de Kepler</strong>, como hemos recordado en la Introducción.</p>
+<a href="#controles">ir a módulo de experimentación</a>
+
+<br><br>
+
+<h3>Tarea 3: estimar la velocidad de escape</h3>
+<p>Una de las variantes de los lanzamientos posibles es el <strong>lanzamiento vertical</strong>, para lo cual basta con colocar el satélite sobre la superficie y "apuntar" hacia arriba la velocidad.</p>
+<p><em>Fijar velocidades iniciales v<sub>i</sub> sucesivamente mayores e ir registrando la altura alcanzada</em>, digamos, H.  Esta  se obtiene consultando el listado numérico de la trayectoria. </p>
+<p>El rango de velocidades iniciales v<sub>i</sub> se determinará por tanteo de forma que H barra todas las distancias accesibles que son, como se ha dicho, aproximadamente 100000 km. Por las razones que se aducen a continuación las medidas se harán más detalladas en la zona de bajas velocidades (al principio) y a altas; manera de hacerlo: cuando ya haya aparecido el mensaje de "Órbita fuera de rango" retroceder en valores de v<sub>i</sub> e ir más poco a poco. Se tomarán al menos 15 medidas de este modo, obteniendo así una serie de duplas:</p>
+<p><span>(v<sub>i1</sub>,H<sub>1</sub>), (v<sub>i2</sub>,H<sub>2</sub>), (v<sub>i3</sub>,H<sub>3</sub>),...</span>
+</p>
+<p>La explotación de esos datos pasa por graficar v<sub>i</sub> frente a H<sub>i</sub>. Se debe ver una curva no lineal en que la velocidad tiende asintóticamente a un valor. Es buen momento para completar alguna medida si se ve conveniente. Una vez dibujada la curva, lo natural es preguntarse qué se debe esperar teóricamente para dicha dependencia.</p>
+<p><em>Deducir una ecuación que ligue la velocidad inicial v<sub>i</sub> frente a la altura alcanzada H</em>. Pista: el campo gravitatorio es conservativo. ¿Es la relación lineal?  Se podrá identificar la <strong>velocidad de escape</strong> v<sub>e</sub> como la correspondiente a H arbitrariamente grande, es decir H &rarr; &infin;. ¿Hasta qué punto el valor máximo alcanzado de v "experimentalmente" en la gráfica anterior se acerca al valor teórico v<sub>e</sub>? </p>
+<p>Otra zona de interés de la curva v<sub>i</sub>=v<sub>i</sub>(H) es la de alcances H cortos. ¿Es posible obtener una dependencia v<sub>i</sub>=v<sub>i</sub>(H) para H &Lt;R<sub>p</sub> a partir de las ecuaciones anteriores teóricas? ¿Cómo compara entonces con la pendiente "experimental" en esa región? ¿Qué se puede obtener de esa identificación?</p>
+<a href="#controles">ir a módulo de experimentación</a>
+
+
+<h2>4. Ejercicios de revisión</h2>
+<p>&bull; Con el módulo de experimentación, situar el cohete a una altura de 10000 km sobre el planeta. Manteniendo &beta;<sub>i</sub> a 90&deg;, ir variando la velocidad inicial hasta encontrar la mínima velocidad, sea v<sub>m</sub>,  a partir de la cual el cohete ya no choca contra el planeta.</p>
+<p>Ahora se consultará la tabla para hallar el punto de máximo acercamiento al planeta anotando su velocidad, digamos v<sub>p</sub>. <em class="preg">A partir de las ecuaciones anteriores teóricas, encontrar una justificación analítica para ese valor concreto de v<sub>p</sub></em>.</p>
+
+<p>&bull; Situar el cohete de nuevo a una altura de 10000 km. Por tanteo encontrar una velocidad suficientemente baja como para que los lanzamientos a distintos ángulo iniciales &beta;<sub>i</sub> conduzcan a una colisión con la superficie del planeta. Para cada ángulo para el que se produce colisión se anotará, de la tabla, la velocidad en el momento de la colisión, que podemos llamar v<sub>c</sub>.</p>
+<p>Se observará que el valor de la velocidad en el momento de la colisión es muy coincidente. <em class="preg">¿Hay alguna explicación para esto? ¿Se podría reencontrar ese valor de v<sub>c</sub> teóricamente?</em></p>
+
+
+
+
+</body>
+</html>
