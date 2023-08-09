@@ -18,7 +18,8 @@ body {
 }
 
 p {
-    width: 90%;
+    width: 75%;
+    margin-left: 50px;
 }
 
 H1 {
@@ -54,6 +55,7 @@ strong {
 
 li {
 	color: darkslategray;
+   margin-left: 40px;
 }
 
 figure {
@@ -262,7 +264,7 @@ input[type=number] {
 	top: 40px;
 	overflow: scroll;
 	width: 280px;
-	height: 280px;
+	height: 300px;
 	border: 1px dotted;
 	font-size:14px;
 }
@@ -276,15 +278,6 @@ input[type=number] {
 	color:DarkSlateGray;
 }
 
-#btn_borrar{
-   position:absolute;
-	left:840px;
-	top: 330px;
-	width: 70px;
-	font-size:12pt;
-   background-color: CadetBlue;
-
-}
 
 </style>
 
@@ -326,7 +319,7 @@ function generarIncognitas() {
     let dni=17853813;
     // tengo una colección de 10 iones
     var uma=1.66e-27; // u.m.a. en kg
-    var qe=1.e-19; // carga elemental del electrón
+    var qe=1.6e-19; // carga elemental del electrón
     const cargaIon=[ // en coulombios
     2*qe, 3*qe, 1*qe, 1*qe, 1*qe, 1*qe, 2*qe, 2*qe, 4*qe, 4*qe
     ];
@@ -337,11 +330,13 @@ function generarIncognitas() {
     let int_09=dni % 10; // de 0 a 9 porque tengo 10 iones preparados
     qIon=cargaIon[int_09];
     mIon=masaIon[int_09];
+    console.log("qIon, mIon = "+ qIon+"  "+ mIon);
     frecB=qIon*campoB/2/Math.PI/mIon/1e6; // frecuencia ciclotrón en MHz
     frecB=frecB.toFixed(3);
     eFinal=Math.pow(qIon*campoB*radioDes,2)/mIon/2; // en Julios
     eFinal=eFinal*6.25e12; // en MeV
     eInicial=(0.05+0.1*Math.random())*eFinal;
+    console.log("Ei = "+eInicial);
      // con B y RD dadas, la eFinal máxima que me sale es sobre 300 MeV
      // que, según eFinal=eInicial+nMax*qIonMin*voltMin, da nMax> 50000 !!
 } 
@@ -384,6 +379,7 @@ function ocultarTodo(lienzo) {
 function medir()  {
 	let varx=document.getElementById("varx").value;
 	var tabla=document.getElementById("tabla");
+   tabla.innerHTML="";
 	var lienzo=document.getElementById("lienzo");
 	var linea="";
 	var varY;
@@ -394,15 +390,15 @@ function medir()  {
 	case "volt":
 		var volt_de=document.getElementById("volt_de").value;
 		if (volt_de.length == 0)  return
-		else volt_de = +volt_de; // de kV en el cuadro input a V
+		else volt_de = +volt_de; // en kV en el cuadro input
 		if (volt_de < voltMin || volt_de > voltMax) alert("'volt de' está fuera de rango");
 		var volt_a=document.getElementById("volt_a").value;
 		if (volt_a.length == 0)  return
-		else volt_a = +volt_a; // de kV en el cuadro input a V
+		else volt_a = +volt_a; // en kV en el cuadro input
 		if (volt_a < voltMin || volt_a > voltMax) alert("'volt a' está fuera de rango");
 		// con "V" se puede hacer un continuo de valores, usaré 20
 		incr=(volt_a-volt_de)/20;
-        // la energía final, independiente de volt está en eFinal
+        // la energía final, independiente de volt, está en eFinal
 		for (let volt = volt_de; volt <= 1.0001*volt_a; volt += incr) {
 			linea=" "+volt.toFixed(3)+"      "+eFinal.toFixed(3)+"\n";
 			tabla.innerHTML+=linea;
@@ -433,7 +429,7 @@ function medir()  {
                energiaY=Math.random()/200;
                linea="  "+(+volt).toFixed(2)+"    "+(+frec).toFixed(3)+"    "+energiaY.toFixed(3)         +"\n";
                arrayX.push(frec);
-			   arrayY.push(energiaY); 
+			      arrayY.push(energiaY); 
             }
 			tabla.innerHTML+=linea;
 		}
@@ -486,11 +482,7 @@ function plotear(arrayX, arrayY, lienzo, color){
 		ctx.fillRect(xp-wRect/2,yp-hRect/2,wRect,hRect);
 	}
 }
-
-function borrarTabla(){
-    let tabla=document.getElementById("tabla");
-     tabla.innerHTML="";
-}   
+ 
 
 </script>
 
@@ -520,14 +512,14 @@ function borrarTabla(){
 <p>Si denotamos por  q la carga de los iones, por V<sub>0</sub>  la amplitud de la diferencia de potencial, en cada pase la energía ganada será q V<sub>0</sub>, por lo que la energía cinética E<sub>n</sub> tras n pasos entre las <i>dés</i>, será:</p>
 
 <p><em style="border: 1px solid darkgreen;
-    padding: 5px;">E<sub>n</sub> = E<sub>0</sub> + n q V<sub>0</sub>  </em> &emsp; (1)</p>
+    padding: 5px;">E<sub>n</sub> =  n q V<sub>0</sub> + E<sub>0</sub> </em> &emsp; (1)</p>
 <p>siendo E<sub>0</sub>  la energía inicial de los iones a la entrada del ciclotrón.</p>
 
 <p>Una vez que el ion penetra en la región de campo, seguirá una trayectoria circular en que la fuerza centrípeta la proporciona la fuerza de Lorentz:</p>
 <p>qvB = mv<sup>2</sup>/R &emsp; (2)</p>
 <p>El tiempo que los iones invierten en recorrer una vuelta bajo el campo B será 
 T<sub>B</sub> = 2&pi;R/v, y, por (2) </p>
-<p><em style="border: 1px solid darkgreen; padding: 5px;">T<sub>B</sub> = 2 &pi; q B/m  </em> &emsp; (3)</p>
+<p><em style="border: 1px solid darkgreen; padding: 5px;">T<sub>B</sub> = 2&pi;m / qB </em> &emsp; (3)</p>
 <p>El resultado notable es que  el periodo no depende de la velocidad que los iones vayan ganando,  por eso se dice que recorren trayectorias <em>isócronas</em>. La frecuencia angular correspondiente, es decir, 2&pi;/T<sub>B</sub> se denomina <em>frecuencia ciclotrón</em>. </p>
 
 <p>Observar que para poder acelerar los iones el voltaje entre <i>dés</i> debe ir cambiando de sentido en cada semivuelta. Eso se consigue con un voltaje alterno V(t), cuya amplitud denotaremos por V<sub>0</sub>. Además, debe haber sincronía entre el movimiento de los iones y el potencial acelerador. En concreto, T<sub>V</sub> es el periodo de V(t), debe cumplirse (ver figura): </p>
@@ -547,19 +539,13 @@ T<sub>B</sub> = 2&pi;R/v, y, por (2) </p>
 <h2>Cifra de mérito</h2>
 <p>La magnitud más importante en el ciclotrón es la energía final E<sub>f</sub> o velocidad final v<sub>f</sub> con que salen los iones de las <i>dés</i>. Su cálculo es tan sencillo como particularizar la ecuación (2) al radio de trayectoria máximo, que será el radio físico de las <i>dés</i>, R<sub>D</sub>. Así, de (2): qB=mv<sub>f</sub>/R<sub>D</sub>, de donde:</p>
 
-<p><em style="border: 1px solid darkgreen; padding: 5px;"> E<sub>f</sub> = &frac12; m v<sub>f</sub>&sup2; = &frac12; q&sup2;B&sup2; R<sub>D</sub>&sup2;/m &emsp; (5)</em></p>
+<p><em style="border: 1px solid darkgreen; padding: 5px;"> E<sub>f</sub> = &frac12; m v<sub>f</sub>&sup2; = q&sup2;B&sup2; R<sub>D</sub>&sup2;/2m &emsp; (5)</em></p>
 
 <p>Y observamos que el tamaño de las <i>dés</i> desempeña un papel central en la energía conseguida.</p>
 
 <h2>Órdenes de magnitud</h2>
 <p>Veamos algunos números:</p>
-<p>El ciclotrón pionero de Ernest O. Lawrence de 1935, premio Nobel en 1939, era tal que:</p>
-<ul>
-<li>R<sub>D</sub> &asymp; 65 cm</li>
-<li>B = 1,6 T</li>
-<li>V<sub>0</sub> = 10000 V</li>
-<li>f = 12 MHz</li>
-</ul>
+<p>El ciclotrón pionero de Ernest O. Lawrence de 1935, premio Nobel en 1939, era tal que:<br> R<sub>D</sub> &asymp; 65 cm; B = 1,6 T; V<sub>0</sub> = 10000 V; f = 12 MHz.</p>
 
 <figure style="float:left;">
 <img src="figuras/Magnets-2.jpg"  width="350" alt="" >
@@ -568,7 +554,16 @@ T<sub>B</sub> = 2&pi;R/v, y, por (2) </p>
 
 <p style="padding-top: 20px;">Hay que hacer notar que producir un campo magnético de esa intensidad sobre tanta área exige grandes bobinas. Así no es extraño que los electroimanes del ciclotrón mencionado pesaran sobre <b>75000 kg</b>. La foto adjunta ilustra claramente la escala en juego.</p>
 <p>Finalmente, se puede añadir que aunque los voltajes aceleradores se mueven en el rango 10<sup>4</sup>&mdash;10<sup>5</sup> voltios, la corriente iónica no suele pasar de unos miliamperios, de modo que la potencia se mueve en los 10 &mdash;100 vatios.</p>
+<div style="font-family: cursive;">
+<p style="clear:both;">En nuestro caso, los parámetros fijos del ciclotrón son:</p>
 
+<li>R<sub>D</sub> = 80 cm</li>
+<li>B = 1,1 T</li>
+
+<p>Y como parámetros regulables:</p>
+<li>10 &leq; <i>V</i> (kV) &leq; 100</li>
+<li>1 &leq; <i>f</i> (MHz) &leq; 30 </li>
+</div>
 
 <h1 style="clear:both;margin-top:80px;">3. Objetivo</h1>
 <p>El objetivo de esta ePráctica es <b>determinar la naturaleza del haz de iones que son acelerados, concretamente,  la carga, la masa y la energía inicial</b> con que entran al ciclotrón.</p>
@@ -627,7 +622,6 @@ de los parámetros:<br><br>
 <textarea  id="tabla" readonly="readonly" >
 </textarea>
 
-<button id="btn_borrar" onclick="borrarTabla()">Limpiar</button>
  
 </div>
 
@@ -664,18 +658,18 @@ de los parámetros:<br><br>
 
 <p>Comparando ambas líneas, en concreto los valores de la diferencia de potencial frente a los pases entre <i>dés</i> realizados N, <em   class="preg">¿por qué el valor de V<sub>0</sub> no es determinante para la energía final ?</em> </p>
 
-<p>Tomar ahora las primeras líneas de la última tabla. La relación entre la energía al cabo del pase n-ésimo E<sub>n</sub> y n deben seguir la relación lineal descrita en la ecuación (1). En consecuencia, con los datos de la tabla, sea gráfica o analíticamente, <em class="preg">se obtendrá la pendiente y término independiente de esa relación y, por comparación con (1), se determinará la energía inicial E<sub>0</sub> del haz de iones, así como la carga de los mismos</em>.</p>
+<p>Tomar ahora las primeras líneas de la última tabla. La relación entre la energía al cabo del pase n-ésimo E<sub>n</sub> y n deben seguir la relación lineal descrita en la ecuación (1). En consecuencia, con los datos de la tabla, sea gráfica o analíticamente, <em class="preg">se obtendrá la pendiente y término independiente de esa relación y, por comparación con (1), se determinará la energía inicial E<sub>0</sub> del haz de iones, y se verificará la (ya obtenida) de los mismos</em>.</p>
 
 <p style="font-weight: bold;">Para rematar, unir estos resultados con los obtenidos sobre la frecuencia ciclotrón para escribir los valores de q, m y E<sub>0</sub> de los iones acelerados.</p>
 
 <h1 >6. Preguntas de revisión</h1>
-<p>&bull; Sabemos que el campo magnético, a través de la fuerza de Lorentz <b>F</b><sub>m</sub> = q <b>v</b> &times; <b>B</b>, no cambia la celeridad de una carga, ya que no realiza trabajo al ser <b>F</b><sub>m</sub> &sdot; <b>v</b> = 0. </p>
+<p><b>1)</b> Sabemos que el campo magnético, a través de la fuerza de Lorentz <b>F</b><sub>m</sub> = q <b>v</b> &times; <b>B</b>, no cambia la celeridad de una carga, ya que no realiza trabajo al ser <b>F</b><sub>m</sub> &sdot; <b>v</b> = 0. </p>
 <p>Entonces, <em class="preg">¿por qué el campo magnético <b>B</b> es tan importante, como se expresa en la ecuación (5), en la energía final E<sub>f</sub> alcanzada en el ciclotrón? </em></p>
 
-<p>&bull; Considerar un voltaje alterno V(t) = V<sub>0</sub> cos (<sup>2&pi;</sup>/<sub>T</sub> t), siendo T su periodo. En t = 0, V es máximo, igual a la amplitud V<sub>0</sub>. En un tiempo t<sub>1</sub> = T+&epsilon;, con el desfase &epsilon; << T, V será positivo y <i>casi</i> máximo pues T+&epsilon; es solo <i>casi</i> un periodo. En un tiempo t<sub>2</sub> = 2(T+&epsilon;) V será aún positivo pero menor que antes. Etcétera. <em class="preg">¿Al cabo de qué tiempo t<sub>n</sub> = n(T+&epsilon;) el voltaje V empieza a ser negativo?</em> <br>
+<p><b>2)</b> Considerar un voltaje alterno V(t) = V<sub>0</sub> cos (<sup>2&pi;</sup>/<sub>T</sub> t), siendo T su periodo. En t = 0, V es máximo, igual a la amplitud V<sub>0</sub>. En un tiempo t<sub>1</sub> = T+&epsilon;, con el desfase &epsilon; << T, V será positivo y <i>casi</i> máximo pues T+&epsilon; es solo <i>casi</i> un periodo. En un tiempo t<sub>2</sub> = 2(T+&epsilon;) V será aún positivo pero menor que antes. Etcétera. <em class="preg">¿Al cabo de qué tiempo t<sub>n</sub> = n(T+&epsilon;) el voltaje V empieza a ser negativo?</em> <br>
 Si n = 500, <em class="preg"> ¿cuál sería entonces el valor de &epsilon;? ¿Tiene esto relación con alguno de los resultados anteriores?</em></p>
 
-<p>&bull; Se dice que los ciclotrones no funcionan cuando la velocidad de las partículas es alta. Ahora debemos tener claro que los ciclotrones funcionan debido a que, al ser las trayectorias de los iones <i>isócronas</i>, cabe "sincronizarlas" con un potencial acelerador alterno, como se expresa en la ecuación (4). <em class="preg">De lo que sabes de la relatividad restringida ¿qué puede hacer que esa sincronización falle?</em></p>
+<p><b>3)</b> Se dice que los ciclotrones no funcionan cuando la velocidad de las partículas es alta. Ahora debemos tener claro que los ciclotrones funcionan debido a que, al ser las trayectorias de los iones <i>isócronas</i>, cabe "sincronizarlas" con un potencial acelerador alterno, como se expresa en la ecuación (4). <em class="preg">De lo que sabes de la relatividad restringida ¿qué puede hacer que esa sincronización falle?</em></p>
 
 
 
