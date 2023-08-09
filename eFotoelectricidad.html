@@ -458,6 +458,7 @@ function ocultarTodo() {
 function medirFC() {
 	let x=document.getElementById("x").value;
 	var tabla=document.getElementById("tabla");
+   tabla.innerHTML="";
 	var fig=document.getElementById("fig");
 	var linea="";
 	var nColector; // fracción de electrones que llegan al colector
@@ -839,13 +840,13 @@ de los parámetros:<br><br>
 
 
 <p>Como tarea preliminar, comenzaremos por acotar los valores de la frecuencia de la radiación que son susceptibles de provocar el efecto fotoeléctrico.</p>
-<p> &bull; <strong>graficar la fotocorriente (FC) en función de la frecuencia, usando como parámetros I=50 y V=0</strong>.</p>
+<p> &bull; <strong>graficar la fotocorriente (FC) en función de la frecuencia, usando como parámetros pot=5 y volt=0</strong>.</p>
 <p> Veremos un salto que sirve para estimar la frecuencia umbral para producir efecto fotoeléctrico; la denotaremos f<sub>u</sub>.  Hay límites al paso mínimo debido al número finito de líneas de la lámpara de Hg.</p>
 
 <p> Volviendo a la ecuación (2): <em> &nbsp; hf = W + E<sub>cmax</sub> ,</em> vemos que, utilizando una frecuencia conocida f (siempre mayor que f<sub>u</sub>), si conseguimos encontrar la energía cinética más alta de los fotoelectrones, accederemos a la función trabajo W. Para ello:</p>
 <p> <strong>&bull; graficar la fotocorriente en función de V crecientemente positivo, usando cualquier f > f<sub>u</sub></strong>.</p>
 
-<p>El valor de V más alto inhibidor de la fotocorriente, que llamaremos <strong>potencial de frenado</strong> y denotaremos como  V<sub>f</sub>, es justo el que corresponde al electrón más rápido; es el que, venciendo el potencial desfavorable, llegaría justo, con velocidad tendiendo a cero, a tocar el colector. Así que por conservación de la energía se cumplirá:</p>
+<p>El valor de V más bajo inhibidor de la fotocorriente, que llamaremos <strong>potencial de frenado</strong> y denotaremos como  V<sub>f</sub>, es justo el que corresponde al electrón más rápido; es el que, venciendo el potencial desfavorable, llegaría justo, con velocidad tendiendo a cero, a tocar el colector. Así que por conservación de la energía se cumplirá:</p>
 <p><em>E<sub>cmax</sub> = e V<sub>f</sub> </em>&emsp; (3),&emsp; siendo e la carga del electrón.</p>
 
 <p>Observaremos que, según la ecuación (2), V<sub>f</sub> es una función de f. Esto sugiere:</p>
@@ -861,7 +862,7 @@ de los parámetros:<br><br>
 <p>Nos piden determinar cuántos fotones deben incidir en el emisor por cada fotoelectrón generado. Llamemos f<sub>phe</sub> a ese factor.</p>
 
 <p>Lógicamente, querremos comprobar el efecto de la potencia de iluminación sobre la fotocorriente.</p>
-<p> &bull; <strong>graficar la fotocorriente en función de la potencia  usando como parámetros el voltaje más favorable (queremos garantizar que capturamos todos los fotoelectrones) y cualquier frecuencia f > f<sub>u</sub></strong>.</p>
+<p> &bull; <strong>graficar la fotocorriente en función de la potencia de la lámpara usando como parámetros el voltaje más favorable (queremos garantizar que capturamos todos los fotoelectrones) y la frecuencia más favorable (¿cuál es?)</strong>.</p>
 
 <p>Observaremos que la FC es estrictamente lineal con la potencia P. Seguramente eso quiere decir algo. Advertimos que, a frecuencia fija,  la potencia es proporcional al número de fotones por segundo que llegan al emisor, en tanto que la fotocorriente lo es al número de electrones por segundo que llegan al colector. </p>
 
@@ -876,14 +877,14 @@ de los parámetros:<br><br>
 <p><em>Si hemos contestado a lo anterior, la eficiencia pedida, f<sub>phe</sub>, no será sino <sup>n<sub>ph</sub></sup>/<sub>n<sub>e</sub></sub>. </em></p>
 
 <h2>5. Preguntas de revisión</h2>
-<p>&bull; Argumenta la veracidad o falsedad de las siguientes afirmaciones:<br>
-<ol>
-<li>la fotocorriente a potencial "favorable" máximo no aumenta con la frecuencia de la radiación incidente</li>
-<li>el potencial de frenado aumenta con la intensidad incidente</li>
-<li>fijando frecuencia, la energía máxima de los fotoelectrones no depende del tipo de emisor</li>
+<p><b>1)</b> Argumenta la veracidad o falsedad de las siguientes afirmaciones:<br>
+<ol type="a">
+<li> la fotocorriente a potencial "favorable" máximo no aumenta con la frecuencia de la radiación incidente</li>
+<li> el potencial de frenado aumenta con la intensidad incidente</li>
+<li> fijando frecuencia, la energía máxima de los fotoelectrones no depende del tipo de emisor</li>
 </ol>
  </p>
-<p>&bull; Se propone pensar en la idea de averiguar las energías de ligadura de los electrones en el metal emisor (<i>espectro de energías</i>), analizando la fotocorriente.</p>
-<p>Para ello, obsérvese la ecuación (1). Lo que se desearía es saber cuántos electrones hay en el emisor para cada energía &epsilon;. Como pista, se trataría de estudiar la fotocorriente en el colector en función del potencial retardador (signo negativo). Considerar un pequeño intervalo de la curva, <em class="preg">¿qué significa que el número de fotelectrones,  baje en una cierta cantidad, digamos &Delta;n<sub>fc</sub>, para un incremento dado del potencial retardador, digamos de V<sub>1</sub> a V<sub>2</sub> ?</em></p>
+<p><b>2) </b>Se propone pensar en la idea de averiguar las energías de ligadura de los electrones en el metal emisor (<i>espectro de energías</i>), analizando la fotocorriente.</p>
+<p>Para ello, obsérvese la ecuación (1). Lo que se desearía es saber cuántos electrones hay en el emisor para cada energía &epsilon;. Como pista, se trataría de estudiar la fotocorriente en el colector en función del potencial retardador (signo positivo). Considerar un pequeño intervalo de la curva, <em class="preg">¿qué significa que el número de fotelectrones,  baje en una cierta cantidad, digamos &Delta;n<sub>fc</sub>, para un incremento dado del potencial retardador, digamos de V<sub>1</sub> a V<sub>2</sub> ?</em></p>
 </body>
 </html>
