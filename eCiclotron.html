@@ -49,6 +49,18 @@ em.preg{
    font-style: normal;
 }
 
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+}
+
+td, th{
+	padding: 6px;
+	text-align: right;
+}
+
 strong {
 	color:Teal;
 }
@@ -492,14 +504,15 @@ function plotear(arrayX, arrayY, lienzo, color){
 
 <body  onload="init()">
 
-<h1>1. Introducción</h1>
+<h1>El Ciclotrón</h1>
+<h2>1. Introducción</h2>
 
 <p>Hasta mediados del siglo XX, los ciclotrones fueron los aceleradores de partículas más potentes conocidos. Incluso hoy día son ampliamente usados para producir haces para la medicina nuclear y la investigación básica. Se puede citar que todavía más de un millar de aceleradores por todo el mundo se basan en el ciclotrón, especialmente para la producción de radionuclidos en medicina nuclear. En concreto, se busca producir radioisótopos de corta vida (átomos radiactivos) para ser usados en la formación de imágenes aplicada a medicina y en investigación.</p>
 
 <p>Una de las limitaciones de los ciclotrones, que forzó su sustitución por los llamados <em>sincrotrones</em>, es que solo son aptos para acelerar partículas cargadas hasta un 10% aproximadamente de la velocidad de la luz, siendo la razón que los efectos relativistas son incompatibles con el fundamento de los ciclotrones. Por eso, las partículas apropiadas para su aceleración en un ciclotrón son las que no son demasiado ligeras, como los protones o deuterones.</p>
 
 
-<h1>2. Fundamentos</h1>
+<h2>2. Fundamentos</h2>
 
 <p>El ciclotrón es un acelerador de iones que trabaja en modo "circular". El proceso de aceleración tiene lugar configurando dos semicírculos metálicos huecos, llamados <em><i>dés</i></em>, separados diametralmente, como se ilustra, y sobre los que se aplica una diferencia de potencial. Un campo magnético perpendicular al campo de las <i>dés</i> fuerza a los iones a atravesar la diferencia de potencial una y otra vez.</p>
 
@@ -537,7 +550,7 @@ T<sub>B</sub> = 2&pi;R/v, y, por (2) </p>
 </figure>
 
 <h2>Cifra de mérito</h2>
-<p>La magnitud más importante en el ciclotrón es la energía final E<sub>f</sub> o velocidad final v<sub>f</sub> con que salen los iones de las <i>dés</i>. Su cálculo es tan sencillo como particularizar la ecuación (2) al radio de trayectoria máximo, que será el radio físico de las <i>dés</i>, R<sub>D</sub>. Así, de (2): qB=mv<sub>f</sub>/R<sub>D</sub>, de donde:</p>
+<p>La magnitud más importante en el ciclotrón es la energía final E<sub>f</sub> o velocidad final v<sub>f</sub> con que salen los iones de las <i>dés</i>. Su cálculo es tan sencillo como particularizar la ecuación (2) al radio de trayectoria máximo, que será el radio físico de las <i>dés</i>, R<sub>D</sub>. Así, de (2): qB=mv<sub>f</sub>/R<sub>D</sub>, y entonces:</p>
 
 <p><em style="border: 1px solid darkgreen; padding: 5px;"> E<sub>f</sub> = &frac12; m v<sub>f</sub>&sup2; = q&sup2;B&sup2; R<sub>D</sub>&sup2;/2m &emsp; (5)</em></p>
 
@@ -565,12 +578,12 @@ T<sub>B</sub> = 2&pi;R/v, y, por (2) </p>
 <li>1 &leq; <i>f</i> (MHz) &leq; 30 </li>
 </div>
 
-<h1 style="clear:both;margin-top:80px;">3. Objetivo</h1>
+<h2 style="clear:both;margin-top:80px;">3. Objetivo</h2>
 <p>El objetivo de esta ePráctica es <b>determinar la naturaleza del haz de iones que son acelerados, concretamente,  la carga, la masa y la energía inicial</b> con que entran al ciclotrón.</p>
 <p>Evidentemente, esto se hará a través de la experimentación ayudado del módulo de experimentación y las indicaciones que siguen.</p>
 
 
-<h1 >4. Módulo de experimentación</h1>
+<h2 >4. Módulo de experimentación</h2>
 <p>El módulo de experimentación consta de un "graficador" que permite visualizar y medir la evolución de la energía que van ganando los iones, que es la magnitud medible, en función de la frecuencia del potencial acelerador, variable <i>frec</i>; de la amplitud V<sub>0</sub> del voltaje acelerador, variable <i>volt</i>; o los sucesivos pases a través de las <i>dés</i>, variable <i>pases</i>.</p>
 <p> Los resultados se muestran también numéricamente en formato tabla. La tabla es editable, lo que significa que se pueden copiar los datos para, por ejemplo, analizarlos en un entorno adecuado, como una hoja de cálculo. </p>
 
@@ -626,9 +639,9 @@ de los parámetros:<br><br>
 </div>
 
 
-<h1 style="clear:both;margin-top:80px;">5. Ejecución de la ePráctica</h1>
+<h2 style="clear:both;margin-top:80px;">5. Ejecución de la ePráctica</h2>
 
-<h2>Tarea 1. Encontrar el periodo del movimiento de los iones</h2>
+<h3>Tarea 1. Encontrar el periodo del movimiento de los iones</h3>
 
 <p>Observar que tenemos control sobre el voltaje aplicado entre las <i>dés</i>. En particular, si recordamos la discusión sobre la sincronización, podemos ir variando la frecuencia del voltaje aplicado (variable <i>frec</i>) esperando que cuando esta coincida con la del movimiento circular de los iones, la respuesta sea más fuerte. Por tanto, empezamos por:</p>
 
@@ -643,7 +656,7 @@ de los parámetros:<br><br>
 
 <p><i>La sorpresa debe venir de que da igual usar un potencial acelerador u otro, dado que la energía final alcanzada es la misma.</i>  Por un lado, eso es compatible con (5) donde no aparece el potencial aplicado. Pero por otro lado, en cada pase entre <i>dés</i> la energía ganada es, según (1), qV<sub>0</sub>. ¿Cómo se entiende esto?</p>
 
-<h2>Tarea 2. Entender el papel del voltaje acelerador</h2>
+<h3>Tarea 2. Entender el papel del voltaje acelerador</h3>
 <p>Acabamos de decir que según medidas enteriores la energía final alcanzada por el haz de iones no depende del voltaje acelerador. Como parece contradictorio, vamos a verificarlo:</p>
 <p><em>&bull; Medir la energía final en función del voltaje acelerador, usando  <i>volt</i> en el módulo de experimentación,  cubriendo todo el rango de valores.</em></p>
 <p>Se verificará así explicitamente que E<sub>f</sub> no depende de la amplitud  V<sub>0</sub>. </p>
@@ -662,7 +675,7 @@ de los parámetros:<br><br>
 
 <p style="font-weight: bold;">Para rematar, unir estos resultados con los obtenidos sobre la frecuencia ciclotrón para escribir los valores de q, m y E<sub>0</sub> de los iones acelerados.</p>
 
-<h1 >6. Preguntas de revisión</h1>
+<h2 >6. Preguntas de comprensión</h2>
 <p><b>1)</b> Sabemos que el campo magnético, a través de la fuerza de Lorentz <b>F</b><sub>m</sub> = q <b>v</b> &times; <b>B</b>, no cambia la celeridad de una carga, ya que no realiza trabajo al ser <b>F</b><sub>m</sub> &sdot; <b>v</b> = 0. </p>
 <p>Entonces, <em class="preg">¿por qué el campo magnético <b>B</b> es tan importante, como se expresa en la ecuación (5), en la energía final E<sub>f</sub> alcanzada en el ciclotrón? </em></p>
 
@@ -671,10 +684,66 @@ Si n = 500, <em class="preg"> ¿cuál sería entonces el valor de &epsilon;? ¿T
 
 <p><b>3)</b> Se dice que los ciclotrones no funcionan cuando la velocidad de las partículas es alta. Ahora debemos tener claro que los ciclotrones funcionan debido a que, al ser las trayectorias de los iones <i>isócronas</i>, cabe "sincronizarlas" con un potencial acelerador alterno, como se expresa en la ecuación (4). <em class="preg">De lo que sabes de la relatividad restringida ¿qué puede hacer que esa sincronización falle?</em></p>
 
+<h2>7. Ejercicios de evaluación</h2>
+<p><b>1)</b> En un ciclotrón un haz de iones con cierta energía inicial es acelerado progresivamente de manera que va ganando energía según los valores de la tabla mostrada; por ejemplo 5 1,63 quiere decir que, tras 5 pases entre <i>dés</i>, el haz ha alcanzado una energía de 1,63 MeV. Hallar la diferencia de potencial V<sub>0</sub> aplicada  entre <i>dés</i> y la energía inicial E<sub>0</sub>.
+<table  class="center">
+<tr>
+<th>n </th>
+<td>1</td>
+<td>5</td>
+<td>10</td>
+<td>15</td>
+<td>20</td>
+</tr>
+<tr>
+<th>E (MeV)</th>
+<td>1,27</td>
+<td>1,63</td>
+<td>2,08</td>
+<td>2,53</td>
+<td>2,98</td>
+</tr>
+</table>
+</p>
+<p><b>2)</b> Se quieren acelerar, mediante un ciclotrón, iones de carga q = 3,2 &times; 10<sup>-19</sup> C y masa m = 4 Da (1 Da=1,66&times; 10<sup>-27</sup> kg), sirviéndose de un voltaje alterno de 9,2 MHz. ¿Cuál de los valores del campo magnético siguientes deberíamos aplicar al ciclotrón para acelerar los iones eficazmente?
+<table  class="center">
+<tr>
+<th>B (T)</th>
+<td>0,8</td>
+<td>1,2</td>
+<td>2,4</td>
+<td>4,8</td>
+</tr>
+</table>
+</p>
+<p><b>3)</b> Se va a probar la energía final alcanzada por un mismo haz de iones en tres ciclotrones distintos. En la tabla adjunta B es la densidad de flujo magnético, R<sub>D</sub> es el radio de las <i>dés</i>, y V<sub>0</sub> es el voltaje acelerador aplicado entre las <i>dés</i>. ¿Con cuál de los tres alcanzará más energía final el haz de iones?
+<table  class="center">
+<tr>
+<th>ciclotrón</th>
+<th>B (T) </th>
+<th>R<sub>D</sub> (m) </th>
+<th>V<sub>0</sub> (kV) </th>
+</tr>
+<tr>
+<th>1</th>
+<td>0,6</td>
+<td>0,6</td>
+<td>40</td>
+</tr>
+<tr>
+<th>2</th>
+<td>0,7</td>
+<td>0,6</td>
+<td>30</td>
+</tr>
+<tr>
+<th>3</th>
+<td>0,9</td>
+<td>0,5</td>
+<td>10</td>
+</tr>
 
-
-
-
-
+</table>
+</p>
 </body>
 </html>

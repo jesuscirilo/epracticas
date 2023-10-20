@@ -20,7 +20,7 @@ body {
 
 p {
     margin-left: 60px;
-    width: 75%;
+    margin-right: 60px;
 }
 
 h1 {
@@ -65,6 +65,17 @@ em.preg{
    font-style: normal;
 }
 
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+}
+
+td, th{
+	padding: 6px;
+	text-align: right;
+}
+
 #interact {
     width: 950px;
 	font-size: 0.9em;
@@ -107,15 +118,6 @@ textarea {
     top:50px;
     left:0px;
     border: 1px dotted;
-}
-
-td{
-	padding:5px;
-	text-align: right;
-}
-
-th{
-	text-align: center;
 }
 
 input{
@@ -225,14 +227,14 @@ function generarIncognitas() {
     else
         window.location.href="index.html";
 // asignar valores a R y M
-    let Mmin=3.9E+22;
+    let Mmin=3.9E+22; // en kg
     let Mmax=9.3E+24;
     let Rmin=5.3E+5; // en m
     let Rmax=3.5E+7; // en m
     let int_010=dni % 11 // de 0 a 10
     masaPlaneta=Mmin+int_010*(Mmax-Mmin)/10.0; // eso da entre Mmin y Mmax
     radioPlaneta=Rmin+int_010*(Rmax-Rmin)/10.0; // // eso da entre Rmin y Rmax
-    console.log("M, R= "+ masaPlaneta+"   "+radioPlaneta);
+    console.log("M(kg), R(m)= "+ masaPlaneta+"   "+radioPlaneta);
     cRadialMaxAbs=cRadialMaxReducida+radioPlaneta;
 }
 
@@ -484,7 +486,7 @@ function graficarOrbitas(factorConversor) {
 
 // constructor de los puntos de la órbita
 function ptoOrbita(cRadial0,angPolar0, celeridad0, angVeloRadio0) {
-   this.cRadialReducida=((cRadial0-radioPlaneta)/1000).toFixed(1);
+   this.cRadialReducida=((cRadial0-radioPlaneta)/1000).toFixed(2);
    this.angPolar=(angPolar0/Math.PI*180.0).toFixed(2);
    this.velokms=(celeridad0/1000.0).toFixed(3);
    this.angVeloRadio=(angVeloRadio0/Math.PI*180.0).toFixed(2);
@@ -644,7 +646,7 @@ Dicha tabla habrá de ser  consultada para responder a las preguntas que serán 
 
 <h3>Tarea 1: determinar la masa y radio del planeta</h3>
 
-El procedimiento consistirá en lo siguiente:
+<p>El procedimiento consistirá en lo siguiente:</p>
 <p>
  <em>Generar órbitas circulares a distintas distancias del planeta</em>. Eso exige en primer lugar que el ángulo &beta;  entre radio y velocidad sea de 90º. Luego, colocar inicialmente el satélite a una distancia y velocidad, a discreción, del planeta e ir ajustando por tanteo la velocidad, de menos a más,  hasta que la órbita se pueda considerar circular, sin modificar la posición inicial. Para ese objetivo lo mejor es, no una apreciación visual, sino consultar el listado numérico de la órbita, verificando que las variaciones máximas de la celeridad del satélite son despreciablemente pequeñas, por ejemplo, menores de 5%.
 </p>
@@ -686,20 +688,70 @@ Finalmente, bastará identificar a<sub>teo</sub> = a<sub>exp</sub> y b<sub>teo</
 <h3>Tarea 3: estimar la velocidad de escape</h3>
 <p>Una de las variantes de los lanzamientos posibles es el <strong>lanzamiento vertical</strong>, para lo cual basta con colocar el satélite sobre la superficie y "apuntar" hacia arriba la velocidad.</p>
 <p><em>Fijar velocidades iniciales v<sub>i</sub> sucesivamente mayores e ir registrando la altura alcanzada</em>, digamos, H.  Esta  se obtiene consultando el listado numérico de la trayectoria. </p>
-<p>El rango de velocidades iniciales v<sub>i</sub> se determinará por tanteo de forma que H barra todas las distancias accesibles que son, como se ha dicho, aproximadamente 100000 km. Por las razones que se aducen a continuación las medidas se harán más detalladas en la zona de bajas velocidades (al principio) y a altas; manera de hacerlo: cuando ya haya aparecido el mensaje de "Órbita fuera de rango" retroceder en valores de v<sub>i</sub> e ir más poco a poco. Se tomarán al menos 15 medidas de este modo, obteniendo así una serie de duplas:</p>
+<p>El rango de velocidades iniciales v<sub>i</sub> se determinará por tanteo de forma que H barra todas las distancias accesibles que son, como se ha dicho, aproximadamente 100000 km.  Se tomarán al menos 15 medidas de este modo, obteniendo así una serie de duplas:</p>
 <p><span>(v<sub>i1</sub>,H<sub>1</sub>), (v<sub>i2</sub>,H<sub>2</sub>), (v<sub>i3</sub>,H<sub>3</sub>),...</span>
 </p>
-<p>La explotación de esos datos pasa por graficar v<sub>i</sub> frente a H<sub>i</sub>. Se debe ver una curva no lineal en que la velocidad tiende asintóticamente a un valor. Es buen momento para completar alguna medida si se ve conveniente. Una vez dibujada la curva, lo natural es preguntarse qué se debe esperar teóricamente para dicha dependencia.</p>
+<p>La explotación de esos datos pasa por graficar v<sub>i</sub> frente a H<sub>i</sub>. Se debe ver una curva no lineal en que la velocidad tiende asintóticamente a un valor.  Una vez dibujada la curva, lo natural es preguntarse qué se debe esperar teóricamente para dicha dependencia.</p>
 <p><em>Deducir una ecuación que ligue la velocidad inicial v<sub>i</sub> frente a la altura alcanzada H</em>. Pista: el campo gravitatorio es conservativo. ¿Es la relación lineal?  Se podrá identificar la <strong>velocidad de escape</strong> v<sub>e</sub> como la correspondiente a H arbitrariamente grande, es decir H &rarr; &infin;. ¿Hasta qué punto el valor máximo alcanzado de v "experimentalmente" en la gráfica anterior se acerca al valor teórico v<sub>e</sub>? </p>
-<p>Otra zona de interés de la curva v<sub>i</sub>=v<sub>i</sub>(H) es la de alcances H cortos. ¿Es posible obtener una dependencia v<sub>i</sub>=v<sub>i</sub>(H) para H &Lt; R a partir de las ecuaciones anteriores teóricas? ¿Cómo compara entonces con la pendiente "experimental" en esa región? ¿Qué se puede obtener de esa identificación?</p>
+
+
+<h3>Tarea 4: determinar experimentalmente la constante de gravitación universal</h3>
+<p>Esta tarea es ampliación de la anterior. Se trata aquí de ampliar las medidas de alcance anteriores pero a la región <nobr>H<sub>i</sub> << R</nobr>. Al graficar v<sub>i</sub> frente a H<sub>i</sub> se observará que ahora se obtiene una recta. Determinar su pendiente por ajuste lineal. Para ver con qué identificar esa pendiente, basta recordar cómo es la conservación de la energía mecánica cuando H<sub>i</sub> << R. Una vez identificada la pendiente teórica, dado que se conoce M y R, se puede deducir directamente la constante de gravitación universal G. </p>
 <a href="#controles">ir a módulo de experimentación</a>
 
-<h2>4. Ejercicios de revisión</h2>
+
+<h2>4. Ejercicios de comprensión</h2>
 <p><b>1) </b>Con el módulo de experimentación, situar el cohete a una altura de 10000 km sobre el planeta. Manteniendo &beta;<sub>i</sub> a 90&deg;, ir variando la velocidad inicial hasta encontrar la mínima velocidad, sea v<sub>m</sub>,  a partir de la cual el cohete ya no choca contra el planeta.</p>
 <p>Ahora se consultará la tabla para hallar el punto de máximo acercamiento al planeta anotando su velocidad, digamos v<sub>p</sub>. <em class="preg">A partir de las ecuaciones anteriores teóricas, encontrar una justificación analítica para ese valor concreto de v<sub>p</sub></em>.</p>
 
 <p><b>2)</b> Situar el cohete de nuevo a una altura de 10000 km. Por tanteo encontrar una velocidad suficientemente baja como para que los lanzamientos a distintos ángulo iniciales &beta;<sub>i</sub> conduzcan a una colisión con la superficie del planeta. Para cada ángulo para el que se produce colisión se anotará, de la tabla, la velocidad en el momento de la colisión, que podemos llamar v<sub>c</sub>.</p>
 <p>Se observará que el valor de la velocidad en el momento de la colisión es muy coincidente. <em class="preg">¿Hay alguna explicación para esto? ¿Se podría reencontrar ese valor de v<sub>c</sub> teóricamente?</em></p>
 
+<h2>5. Ejercicios de evaluación</h2>
+<p><b>1)</b><br></p>
+<p>Un satélite describe órbitas circulares alrededor de un planeta esférico. Sabiendo las distancias a la superficie del planeta y la velocidad de las órbitas según la tabla adjunta, determinar la masa y radio del planeta.
+
+<table  class="center">
+<tr>
+<th>H<sub>orb</sub> (km)</th>
+<td>100</td>
+<td>1000</td>
+<td>10000</td>
+<td>50000</td>
+<td>90000</td>
+</tr>
+<tr>
+<th>v<sub>orb</sub> (km/s)</th>
+<td>2,033</td>
+<td>1,305</td>
+<td>0,497</td>
+<td>0,227</td>
+<td>0,169</td>
+</tr>
+</table>
+</p>
+<p><b>2)</b><br></p>
+<p>Se lanza un cohete verticalmente desde la superficie de un planeta que tiene un radio de 35000 km, con distintas velocidades iniciales. Las alturas (máximas) alcanzadas sobre la superficie son las que especifica la tabla adjunta. A partir de esos datos determinar la masa del planeta. Datos: G=6,67 &times; 10 <sup>-11</sup> Nm<sup>2</sup>/kg<sup>2</sup>.
+<table  class="center">
+<tr>
+<th>v<sub>i</sub> (km/s)</th>
+<td>0,1</td>
+<td>0,2</td>
+<td>0,3</td>
+<td>0,4</td>
+<td>0,5</td>
+</tr>
+<tr>
+<th>H<sub>max</sub> (km)</th>
+<td>9,87</td>
+<td>39,52</td>
+<td>89,04</td>
+<td>158,61</td>
+<td>248,46</td>
+</tr>
+</table>
+</p>
+<p><b>3)</b><br></p>
+<p>A una distancia de 30000 km de la superficie de la Tierra se lanza un cohete con una velocidad v<sub>0</sub>, perpendicular al radio vector del cohete, adecuada para describir una órbita circular alrededor del planeta. Si la velocidad de lanzamiento fuera ligeramente superior a v<sub>0</sub> ocurriría que: a) el cohete se escaparía de la atracción terrestre; b) se estrellaría contra la Tierra; c) describiría una órbita elíptica.</p>
 </body>
 </html>
