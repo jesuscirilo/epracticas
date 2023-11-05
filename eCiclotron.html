@@ -22,6 +22,11 @@ p {
     margin-left: 50px;
 }
 
+a {
+   color:gray;
+   margin-left: 20px;
+   }
+
 H1 {
 	color:darkgreen;
 	padding-top:40px;
@@ -279,6 +284,7 @@ input[type=number] {
 	height: 300px;
 	border: 1px dotted;
 	font-size:14px;
+   resize: none;
 }
 
 #limites {
@@ -296,206 +302,7 @@ input[type=number] {
 
 
 <script>
-// params básicos de entrada
-const dalton=1.66e-27; // u.m.a. en kg
-const e=1.e-19; // carga elemental del electrón
-const campoB=1.1; // en Teslas
-const radioDes=0.8; // en m
-const voltMin=10; // V0_min en kV
-const voltMax=100; // V0_max en kV
-const frecMin=1.0; // frec min  1 MHz
-const frecMax=30; // frec max 30 MHz
-const nMin=1; // número mínimo de pases entre dés
-const nMax=80000; // número máximo de pases entre dés
-// estos serán después aleatorios ligados al dni
-var qIon; // será la carga del ion
-var mIon; // será la masa del ion
-var frecB; // será la frecuencia ciclotrón
-var eFinal; // energía a la salida del ciclotrón
-var eInicial; // energía a la entrada del ciclotrón
-const color="darkgreen";
-
-
-function init(){
-   generarIncognitas();
-}
-
-function generarIncognitas() {
-    // extraer dni
-    //var cad=window.location.search;
-    //    if (cad && cad.indexOf('undefined')== -1)
-    //        var dni=cad.substring(cad.indexOf('=')+1,cad.length);
-    //    else
-    //        window.location.href="index.html";
-    // asignar valores a funcTrabajo y factorFC
-    let dni=17853813;
-    // tengo una colección de 10 iones
-    var uma=1.66e-27; // u.m.a. en kg
-    var qe=1.6e-19; // carga elemental del electrón
-    const cargaIon=[ // en coulombios
-    2*qe, 3*qe, 1*qe, 1*qe, 1*qe, 1*qe, 2*qe, 2*qe, 4*qe, 4*qe
-    ];
-    const masaIon=[ // en kg
-    9.012*uma,  10.811*uma, 2.014*uma, 3.016*uma, 6.015*uma,
-    7.016*uma, 4.003*uma, 3.016*uma, 2.000*uma, 13.003*uma
-    ];
-    let int_09=dni % 10; // de 0 a 9 porque tengo 10 iones preparados
-    qIon=cargaIon[int_09];
-    mIon=masaIon[int_09];
-    console.log("qIon, mIon = "+ qIon+"  "+ mIon);
-    frecB=qIon*campoB/2/Math.PI/mIon/1e6; // frecuencia ciclotrón en MHz
-    frecB=frecB.toFixed(3);
-    eFinal=Math.pow(qIon*campoB*radioDes,2)/mIon/2; // en Julios
-    eFinal=eFinal*6.25e12; // en MeV
-    eInicial=(0.05+0.1*Math.random())*eFinal;
-    console.log("Ei = "+eInicial);
-     // con B y RD dadas, la eFinal máxima que me sale es sobre 300 MeV
-     // que, según eFinal=eInicial+nMax*qIonMin*voltMin, da nMax> 50000 !!
-} 
-
-function montarGraf(){
-	// volver todo a inicio por si no es primer uso de la gráfica
-	ocultarTodo("lienzo");
-	let varx=document.getElementById("varx").value;
-   let varY=document.getElementById("varY");
-   let cabTabla=document.getElementById("cabtabla");
-  
-	var aEle=[];
-	switch (varx) {
-	case "volt":
-	  aEle=["lvolt_de", "volt_de", "lvolt_a", "volt_a", "varY"];
-      cabTabla.innerHTML= "<pre>  volt (kV)   E<sub>final</sub> (MeV) </pre>";
-      varY.innerHTML="E<sub>final</sub> (MeV)";
-	  break;
-	case "frec":
-		 aEle=[ "lvolt", "volt", "lfrec_de", "frec_de", "lfrec_a", "frec_a", "varY"];
-         cabTabla.innerHTML= "<pre>  volt (kV)  frec (MHz)   E<sub>final</sub> (MeV) </pre>";
-         varY.innerHTML="E<sub>final</sub> (MeV)";
-        break;
-    case "pases":
-		 aEle=["lvolt", "volt", "varY"];
-       cabTabla.innerHTML= "<pre>  volt (kV)  n (adim)   E<sub>n</sub> (MeV) </pre>";
-       varY.innerHTML="E<sub>pase</sub> (MeV)";
-	}
-	for (let i = 0; i < aEle.length; i++)
-	  	document.getElementById(aEle[i]).style.visibility="visible";
-}
-
-function ocultarTodo(lienzo) {
-	var aEle=[];
-	aEle=[ "lvolt", "volt", "lvolt_de", "volt_de", "lvolt_a", "volt_a", "lfrec_de", "frec_de", "lfrec_a", "frec_a","varY"];
-	for (let i = 0; i < aEle.length; i++)
-	  	document.getElementById(aEle[i]).style.visibility="hidden";
-}
-
-function medir()  {
-	let varx=document.getElementById("varx").value;
-	var tabla=document.getElementById("tabla");
-   tabla.innerHTML="";
-	var lienzo=document.getElementById("lienzo");
-	var linea="";
-	var varY;
-	var incr;
-	var volt, pases;
-	var arrayX=[], arrayY=[];
-	switch (varx) {
-	case "volt":
-		var volt_de=document.getElementById("volt_de").value;
-		if (volt_de.length == 0)  return
-		else volt_de = +volt_de; // en kV en el cuadro input
-		if (volt_de < voltMin || volt_de > voltMax) alert("'volt de' está fuera de rango");
-		var volt_a=document.getElementById("volt_a").value;
-		if (volt_a.length == 0)  return
-		else volt_a = +volt_a; // en kV en el cuadro input
-		if (volt_a < voltMin || volt_a > voltMax) alert("'volt a' está fuera de rango");
-		// con "V" se puede hacer un continuo de valores, usaré 20
-		incr=(volt_a-volt_de)/20;
-        // la energía final, independiente de volt, está en eFinal
-		for (let volt = volt_de; volt <= 1.0001*volt_a; volt += incr) {
-			linea=" "+volt.toFixed(3)+"      "+eFinal.toFixed(3)+"\n";
-			tabla.innerHTML+=linea;
-			arrayX.push(volt);
-			arrayY.push(eFinal);
-		}
-		break;
-	case "frec":
-		volt=document.getElementById("volt").value;
-		if (volt.length == 0)  return;
-		if (volt < voltMin || volt > voltMax) return;
-		var frec_de=document.getElementById("frec_de").value;
-		if (frec_de.length == 0)  return;
-		if (frec_de < frecMin || frec_de > frecMax) return;
-		var frec_a=document.getElementById("frec_a").value;
-		if (frec_a.length == 0)  return;
-		if (frec_a < frecMin || frec_a > frecMax) return;
-		// admito un continio de valores de frec, con límites, usaré 20
-		incr=Math.max(0.05,(frec_a-frec_de)/20);
-		for (let frec = +frec_de; frec <= 1.0001*frec_a; frec += incr) {
-		    // se testea si frec pasa por frecB
-            if ((frec>frecB) && (frec-incr < frecB)){
-               	linea="  "+(+volt).toFixed(2)+"    "+(+frecB).toFixed(3)+"    "+eFinal.toFixed(3)         +"\n";
-               arrayX.push(frecB);
-			   arrayY.push(eFinal);
-            }
-            else {
-               energiaY=Math.random()/200;
-               linea="  "+(+volt).toFixed(2)+"    "+(+frec).toFixed(3)+"    "+energiaY.toFixed(3)         +"\n";
-               arrayX.push(frec);
-			      arrayY.push(energiaY); 
-            }
-			tabla.innerHTML+=linea;
-		}
-      break;
-   case "pases":
-      var En;
-      volt=document.getElementById("volt").value;
-	   if (volt.length == 0)  return;  
-	   if (volt < voltMin || volt > voltMax) alert("volt fuera de rango");
-      // el incremento de n debe ser entero  
-      const f=(qIon/1.6e-19)*(volt*1e3)/1e6; // en MeV
-      // número entero máximo de pases antes de alcanzar radioDes
-      let N=Math.ceil((eFinal-eInicial)/f);
-      for (let n=1; n <= N; n++){
-          En=eInicial+f*n; // en MeV
-         // console.log("n, Ei, En= "+n+" "+eInicial.toFixed(3)+" "+En.toFixed(2)+"\n");
-         linea="   "+volt+"        "+n+"        "+En.toFixed(3)+"\n";
-		 tabla.innerHTML+=linea;
-		 arrayX.push(n);
-		 arrayY.push(En);
-      }
-   }
-   tabla.innerHTML+="\n"; // para separar series de medida
-   plotear(arrayX, arrayY, lienzo, color);
-}
-
-function plotear(arrayX, arrayY, lienzo, color){
-	// origen en esquina superior izqda
-	let dw=30;
-	let dh=10;
-	var ctx=lienzo.getContext('2d');
-	var wl=lienzo.width; // anchura lienzo en px
-	var hl=lienzo.height; // altura lienzo en px
-	ctx.clearRect(0,0,wl,hl);
-	ctx.fillStyle=color;
-	ctx.strokeStyle=color;
-	// extremos valores usuario
-	var xm=Math.min.apply(null,arrayX);
-	var xM=Math.max.apply(null,arrayX);
-	var ym=Math.min.apply(null,arrayY);
-	var yM=Math.max.apply(null,arrayY);
-     // aquí puede ocurrir que ym=yM
-     if (Math.abs(yM-ym)<0.01*ym) ym=0;
-	var xp, yp; // coordenadas punto en px
-	var wRect=4;
-	var hRect=4;
-	for (i=0; i<arrayX.length; i++) {
-		xp=wl/(xM-xm)*(arrayX[i]-xm); // conversión de u.u. a px en x
-		yp=(hl-2*dh)/(ym-yM)*(arrayY[i]-yM)+dh; // conversión de u.u. a px en y con dh de margen
-		ctx.fillRect(xp-wRect/2,yp-hRect/2,wRect,hRect);
-	}
-}
- 
-
+var _0x40cc82=_0x3ecc;(function(_0x568a96,_0x18f060){var _0x446f0b=_0x3ecc,_0x22ccc3=_0x568a96();while(!![]){try{var _0x185203=-parseInt(_0x446f0b(0xb0))/0x1*(parseInt(_0x446f0b(0xb4))/0x2)+parseInt(_0x446f0b(0xb9))/0x3+parseInt(_0x446f0b(0xab))/0x4+-parseInt(_0x446f0b(0xa5))/0x5+-parseInt(_0x446f0b(0xa6))/0x6*(parseInt(_0x446f0b(0xc9))/0x7)+-parseInt(_0x446f0b(0x9d))/0x8+parseInt(_0x446f0b(0xc3))/0x9;if(_0x185203===_0x18f060)break;else _0x22ccc3['push'](_0x22ccc3['shift']());}catch(_0x23317c){_0x22ccc3['push'](_0x22ccc3['shift']());}}}(_0x3bfd,0x98aa1));const dalton=1.66e-27,e=1e-19,campoB=1.1,radioDes=0.8,voltMin=0xa,voltMax=0x64,frecMin=0x1,frecMax=0x1e,nMin=0x1,nMax=0x13880;var qIon,mIon,frecB,eFinal,eInicial;function _0x3ecc(_0x2393d3,_0x18dd4c){var _0x3bfd43=_0x3bfd();return _0x3ecc=function(_0x3eccb3,_0x465021){_0x3eccb3=_0x3eccb3-0x98;var _0x11fcc9=_0x3bfd43[_0x3eccb3];return _0x11fcc9;},_0x3ecc(_0x2393d3,_0x18dd4c);}const color=_0x40cc82(0xbc);function init(){generarIncognitas();}function generarIncognitas(){var _0xc47c45=_0x40cc82;let _0x180eae=0x1106d75;var _0x5cab38=1.66e-27,_0x490662=1.6e-19;const _0x4e0842=[0x2*_0x490662,0x3*_0x490662,0x1*_0x490662,0x1*_0x490662,0x1*_0x490662,0x1*_0x490662,0x2*_0x490662,0x2*_0x490662,0x4*_0x490662,0x4*_0x490662],_0xd3f719=[9.012*_0x5cab38,10.811*_0x5cab38,2.014*_0x5cab38,3.016*_0x5cab38,6.015*_0x5cab38,7.016*_0x5cab38,4.003*_0x5cab38,3.016*_0x5cab38,0x2*_0x5cab38,13.003*_0x5cab38];let _0x5db137=_0x180eae%0xa;qIon=_0x4e0842[_0x5db137],mIon=_0xd3f719[_0x5db137],frecB=qIon*campoB/0x2/Math['PI']/mIon/0xf4240,frecB=frecB[_0xc47c45(0xbd)](0x3),eFinal=Math[_0xc47c45(0x9c)](qIon*campoB*radioDes,0x2)/mIon/0x2,eFinal=eFinal*0x5af3107a400,eInicial=(0.05+0.1*Math[_0xc47c45(0x9b)]())*eFinal;}function montarGraf(){var _0x92dba0=_0x40cc82;ocultarTodo(_0x92dba0(0xbe));let _0x31c977=document[_0x92dba0(0xca)](_0x92dba0(0x99))[_0x92dba0(0xa7)],_0x16bf47=document[_0x92dba0(0xca)](_0x92dba0(0x98)),_0x5c7329=document['getElementById'](_0x92dba0(0x9f));var _0x5ad2a2=[];switch(_0x31c977){case _0x92dba0(0xa4):_0x5ad2a2=['lvolt_de',_0x92dba0(0xc4),_0x92dba0(0xc7),_0x92dba0(0xb6),_0x92dba0(0x98)],_0x5c7329[_0x92dba0(0xb1)]='<pre>\x20\x20volt\x20(kV)\x20\x20\x20E<sub>final</sub>\x20(MeV)\x20</pre>',_0x16bf47[_0x92dba0(0xb1)]='E<sub>final</sub>\x20(MeV)';break;case _0x92dba0(0xa9):_0x5ad2a2=['lvolt',_0x92dba0(0xa4),'lfrec_de',_0x92dba0(0xc2),'lfrec_a',_0x92dba0(0xc8),_0x92dba0(0x98)],_0x5c7329[_0x92dba0(0xb1)]='<pre>\x20\x20volt\x20(kV)\x20\x20frec\x20(MHz)\x20\x20\x20E<sub>final</sub>\x20(MeV)\x20</pre>',_0x16bf47[_0x92dba0(0xb1)]=_0x92dba0(0xa0);break;case _0x92dba0(0xc0):_0x5ad2a2=[_0x92dba0(0xaf),_0x92dba0(0xa4),_0x92dba0(0x98)],_0x5c7329[_0x92dba0(0xb1)]=_0x92dba0(0x9e),_0x16bf47[_0x92dba0(0xb1)]='E<sub>pase</sub>\x20(MeV)';}for(let _0x516834=0x0;_0x516834<_0x5ad2a2['length'];_0x516834++)document['getElementById'](_0x5ad2a2[_0x516834])[_0x92dba0(0xc1)][_0x92dba0(0xc6)]=_0x92dba0(0xc5);}function ocultarTodo(_0x1d8143){var _0x4103dc=_0x40cc82,_0x32bd22=[];_0x32bd22=['lvolt','volt',_0x4103dc(0x9a),'volt_de',_0x4103dc(0xc7),'volt_a','lfrec_de',_0x4103dc(0xc2),_0x4103dc(0xb7),'frec_a','varY'];for(let _0x5f583f=0x0;_0x5f583f<_0x32bd22[_0x4103dc(0xb2)];_0x5f583f++)document[_0x4103dc(0xca)](_0x32bd22[_0x5f583f])['style'][_0x4103dc(0xc6)]=_0x4103dc(0xae);}function medir(){var _0x37043a=_0x40cc82;let _0xae0fb4=document['getElementById'](_0x37043a(0x99))[_0x37043a(0xa7)];var _0x193921=document[_0x37043a(0xca)](_0x37043a(0xb8));_0x193921[_0x37043a(0xb1)]='';var _0x427221=document[_0x37043a(0xca)](_0x37043a(0xbe)),_0x45f061='',_0x1224c7,_0x3cbbad,_0x347668,_0x53e68b,_0x208671=[],_0x299ffc=[];switch(_0xae0fb4){case _0x37043a(0xa4):var _0x321c4a=document['getElementById']('volt_de')[_0x37043a(0xa7)];if(_0x321c4a[_0x37043a(0xb2)]==0x0)return;else _0x321c4a=+_0x321c4a;if(_0x321c4a<voltMin||_0x321c4a>voltMax)alert('\x27volt\x20de\x27\x20está\x20fuera\x20de\x20rango');var _0xfec26f=document['getElementById'](_0x37043a(0xb6))[_0x37043a(0xa7)];if(_0xfec26f[_0x37043a(0xb2)]==0x0)return;else _0xfec26f=+_0xfec26f;if(_0xfec26f<voltMin||_0xfec26f>voltMax)alert('\x27volt\x20a\x27\x20está\x20fuera\x20de\x20rango');_0x3cbbad=(_0xfec26f-_0x321c4a)/0x14;for(let _0x108261=_0x321c4a;_0x108261<=1.0001*_0xfec26f;_0x108261+=_0x3cbbad){_0x45f061='\x20'+_0x108261[_0x37043a(0xbd)](0x3)+_0x37043a(0xaa)+eFinal['toFixed'](0x3)+'\x0a',_0x193921[_0x37043a(0xb1)]+=_0x45f061,_0x208671[_0x37043a(0xbf)](_0x108261),_0x299ffc[_0x37043a(0xbf)](eFinal);}break;case _0x37043a(0xa9):_0x347668=document[_0x37043a(0xca)]('volt')[_0x37043a(0xa7)];if(_0x347668['length']==0x0)return;if(_0x347668<voltMin||_0x347668>voltMax)return;var _0x238d2d=document[_0x37043a(0xca)](_0x37043a(0xc2))[_0x37043a(0xa7)];if(_0x238d2d[_0x37043a(0xb2)]==0x0)return;if(_0x238d2d<frecMin||_0x238d2d>frecMax)return;var _0x21561b=document[_0x37043a(0xca)](_0x37043a(0xc8))[_0x37043a(0xa7)];if(_0x21561b[_0x37043a(0xb2)]==0x0)return;if(_0x21561b<frecMin||_0x21561b>frecMax)return;_0x3cbbad=Math[_0x37043a(0xbb)](0.05,(_0x21561b-_0x238d2d)/0x14);for(let _0x118b42=+_0x238d2d;_0x118b42<=1.0001*_0x21561b;_0x118b42+=_0x3cbbad){_0x118b42>frecB&&_0x118b42-_0x3cbbad<frecB?(_0x45f061='\x20\x20'+(+_0x347668)[_0x37043a(0xbd)](0x2)+_0x37043a(0xa2)+(+frecB)[_0x37043a(0xbd)](0x3)+_0x37043a(0xa2)+eFinal[_0x37043a(0xbd)](0x3)+'\x0a',_0x208671[_0x37043a(0xbf)](frecB),_0x299ffc[_0x37043a(0xbf)](eFinal)):(energiaY=Math[_0x37043a(0x9b)]()/0xc8,_0x45f061='\x20\x20'+(+_0x347668)['toFixed'](0x2)+_0x37043a(0xa2)+(+_0x118b42)['toFixed'](0x3)+'\x20\x20\x20\x20'+energiaY['toFixed'](0x3)+'\x0a',_0x208671[_0x37043a(0xbf)](_0x118b42),_0x299ffc['push'](energiaY)),_0x193921[_0x37043a(0xb1)]+=_0x45f061;}break;case _0x37043a(0xc0):var _0x5c54f9;_0x347668=document[_0x37043a(0xca)]('volt')[_0x37043a(0xa7)];if(_0x347668[_0x37043a(0xb2)]==0x0)return;if(_0x347668<voltMin||_0x347668>voltMax)alert('volt\x20fuera\x20de\x20rango');const _0x23f3df=qIon/1.6e-19*(_0x347668*0x3e8)/0xf4240;let _0x50abc2=Math[_0x37043a(0xb3)]((eFinal-eInicial)/_0x23f3df);for(let _0x167f69=0x1;_0x167f69<=_0x50abc2;_0x167f69++){_0x5c54f9=eInicial+_0x23f3df*_0x167f69,_0x45f061=_0x37043a(0xcb)+_0x347668+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x167f69+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x5c54f9[_0x37043a(0xbd)](0x3)+'\x0a',_0x193921[_0x37043a(0xb1)]+=_0x45f061,_0x208671[_0x37043a(0xbf)](_0x167f69),_0x299ffc[_0x37043a(0xbf)](_0x5c54f9);}}_0x193921[_0x37043a(0xb1)]+='\x0a',plotear(_0x208671,_0x299ffc,_0x427221,color);}function _0x3bfd(){var _0x3acd61=['cabtabla','E<sub>final</sub>\x20(MeV)','fillStyle','\x20\x20\x20\x20','clearRect','volt','1694230tAJnPK','222lDyChG','value','strokeStyle','frec','\x20\x20\x20\x20\x20\x20','4630248qoDgUD','fillRect','min','hidden','lvolt','11831UPeuFh','innerHTML','length','ceil','202UGOzcD','apply','volt_a','lfrec_a','tabla','18798MbeNve','abs','max','darkgreen','toFixed','lienzo','push','pases','style','frec_de','14811642BIrBaB','volt_de','visible','visibility','lvolt_a','frec_a','78211DgFURD','getElementById','\x20\x20\x20','varY','varx','lvolt_de','random','pow','1896600OXBcTP','<pre>volt\x20(kV)\x20\x20n\x20(pases)\x20\x20\x20E<sub>n</sub>\x20(MeV)\x20</pre>'];_0x3bfd=function(){return _0x3acd61;};return _0x3bfd();}function plotear(_0x4698d5,_0x2abc5d,_0x4f35f7,_0x2953ee){var _0x397d04=_0x40cc82;let _0x9915ee=0x1e,_0x1f4aad=0xa;var _0x359154=_0x4f35f7['getContext']('2d'),_0x4c8df5=_0x4f35f7['width'],_0x45c1a5=_0x4f35f7['height'];_0x359154[_0x397d04(0xa3)](0x0,0x0,_0x4c8df5,_0x45c1a5),_0x359154[_0x397d04(0xa1)]=_0x2953ee,_0x359154[_0x397d04(0xa8)]=_0x2953ee;var _0x2246f2=Math['min'][_0x397d04(0xb5)](null,_0x4698d5),_0xb3f2bc=Math['max'][_0x397d04(0xb5)](null,_0x4698d5),_0x27c72f=Math[_0x397d04(0xad)][_0x397d04(0xb5)](null,_0x2abc5d),_0x24766b=Math[_0x397d04(0xbb)][_0x397d04(0xb5)](null,_0x2abc5d);if(Math[_0x397d04(0xba)](_0x24766b-_0x27c72f)<0.01*_0x27c72f)_0x27c72f=0x0;var _0x223702,_0x4fba90,_0x5ce0ba=0x4,_0x1d10b2=0x4;for(i=0x0;i<_0x4698d5['length'];i++){_0x223702=_0x4c8df5/(_0xb3f2bc-_0x2246f2)*(_0x4698d5[i]-_0x2246f2),_0x4fba90=(_0x45c1a5-0x2*_0x1f4aad)/(_0x27c72f-_0x24766b)*(_0x2abc5d[i]-_0x24766b)+_0x1f4aad,_0x359154[_0x397d04(0xac)](_0x223702-_0x5ce0ba/0x2,_0x4fba90-_0x1d10b2/0x2,_0x5ce0ba,_0x1d10b2);}}
 </script>
 
 
@@ -524,11 +331,11 @@ function plotear(arrayX, arrayY, lienzo, color){
 
 <p>Si denotamos por  q la carga de los iones, por V<sub>0</sub>  la amplitud de la diferencia de potencial, en cada pase la energía ganada será q V<sub>0</sub>, por lo que la energía cinética E<sub>n</sub> tras n pasos entre las <i>dés</i>, será:</p>
 
-<p><em style="border: 1px solid darkgreen;
-    padding: 5px;">E<sub>n</sub> =  n q V<sub>0</sub> + E<sub>0</sub> </em> &emsp; (1)</p>
+<p><em style="border: 1px solid darkgreen;padding: 5px;">
+ E<sub>n</sub> =  n q V<sub>0</sub> + E<sub>0</sub> </em> &emsp; (1)</p>
 <p>siendo E<sub>0</sub>  la energía inicial de los iones a la entrada del ciclotrón.</p>
 
-<p>Una vez que el ion penetra en la región de campo, seguirá una trayectoria circular en que la fuerza centrípeta la proporciona la fuerza de Lorentz:</p>
+<p>Una vez que el ion penetra en la región de campo magnético, seguirá una trayectoria circular en que la fuerza centrípeta la proporciona la fuerza de Lorentz:</p>
 <p>qvB = mv<sup>2</sup>/R &emsp; (2)</p>
 <p>El tiempo que los iones invierten en recorrer una vuelta bajo el campo B será 
 T<sub>B</sub> = 2&pi;R/v, y, por (2) </p>
@@ -565,7 +372,7 @@ T<sub>B</sub> = 2&pi;R/v, y, por (2) </p>
 <figcaption> <br> Fig.4. Electroimanes de un antiguo ciclotrón.
 </figure>
 
-<p style="padding-top: 20px;">Hay que hacer notar que producir un campo magnético de esa intensidad sobre tanta área exige grandes bobinas. Así no es extraño que los electroimanes del ciclotrón mencionado pesaran sobre <b>75000 kg</b>. La foto adjunta ilustra claramente la escala en juego.</p>
+<p style="padding-top: 20px;">Hay que hacer notar que producir un campo magnético de esa intensidad sobre tanta área exige grandes bobinas. Por eso, no es extraño que los electroimanes del ciclotrón mencionado pesaran sobre <b>75000 kg</b>. La foto adjunta ilustra claramente la escala en juego.</p>
 <p>Finalmente, se puede añadir que aunque los voltajes aceleradores se mueven en el rango 10<sup>4</sup>&mdash;10<sup>5</sup> voltios, la corriente iónica no suele pasar de unos miliamperios, de modo que la potencia se mueve en los 10 &mdash;100 vatios.</p>
 <div style="font-family: cursive;">
 <p style="clear:both;">En nuestro caso, los parámetros fijos del ciclotrón son:</p>
@@ -649,12 +456,14 @@ de los parámetros:<br><br>
 
 <p>En la tabla de salida de datos, se observará que hay un valor de <i>frec</i> para el que la energía final, E<sub>f</sub>, es, con mucha diferencia, máxima (tanto es así, que incluso tomando un rango "fino" de frec, sigue observándose un pico muy preciso). De este valor obtendremos el periodo del potencial T<sub>V</sub>. Este será también el periodo del movimiento de los iones T<sub>B</sub>. Anotar los valores de  T<sub>B</sub> y de E<sub>f</sub> </p>
 
-<p><em  class="preg">¿Qué información podemos obtener de aplicar la ecuación (4) al valor T<sub>B</sub> experimental ?</em> </p>
-<p><em   class="preg">¿Qué información podemos obtener de aplicar la ecuación (5) a  la energía final E<sub>f</sub> que acabamos de conocer experimentalmente ?</em> </p>
+<p><em  class="preg">¿Qué información podemos obtener de aplicar la ecuación (4): T<sub>V</sub> = T<sub>B</sub> al valor T<sub>B</sub> experimental dado por la ecuación (3): T<sub>B</sub> = 2&pi;m / qB ?</em> </p>
+<p><em   class="preg">¿Qué información podemos obtener de aplicar la ecuación (5): E<sub>f</sub> = &frac12; m v<sub>f</sub>&sup2; = q&sup2;B&sup2; R<sub>D</sub>&sup2;/2m a  la energía final E<sub>f</sub> que acabamos de conocer experimentalmente ?</em> </p>
 
 <p><em> &bull;Repetir la medida anterior usando un valor alto de la amplitud del potencial, por ejemplo <i>volt</i>=100, que serán kV.</em></p>
 
-<p><i>La sorpresa debe venir de que da igual usar un potencial acelerador u otro, dado que la energía final alcanzada es la misma.</i>  Por un lado, eso es compatible con (5) donde no aparece el potencial aplicado. Pero por otro lado, en cada pase entre <i>dés</i> la energía ganada es, según (1), qV<sub>0</sub>. ¿Cómo se entiende esto?</p>
+<p><i>La sorpresa debe venir de que da igual usar un potencial acelerador u otro, dado que la energía final alcanzada es la misma.</i>  Por un lado, eso es compatible con (5) donde no aparece el potencial aplicado. Pero por otro lado, en cada pase entre <i>dés</i> la energía ganada es, según (1): E<sub>n</sub> =  n q V<sub>0</sub> + E<sub>0</sub>, igual a qV<sub>0</sub>. ¿Cómo se entiende esto?</p>
+
+<a href="#ref">ir a módulo de experimentación</a>
 
 <h3>Tarea 2. Entender el papel del voltaje acelerador</h3>
 <p>Acabamos de decir que según medidas enteriores la energía final alcanzada por el haz de iones no depende del voltaje acelerador. Como parece contradictorio, vamos a verificarlo:</p>
@@ -671,18 +480,22 @@ de los parámetros:<br><br>
 
 <p>Comparando ambas líneas, en concreto los valores de la diferencia de potencial frente a los pases entre <i>dés</i> realizados N, <em   class="preg">¿por qué el valor de V<sub>0</sub> no es determinante para la energía final ?</em> </p>
 
-<p>Tomar ahora las primeras líneas de la última tabla. La relación entre la energía al cabo del pase n-ésimo E<sub>n</sub> y n deben seguir la relación lineal descrita en la ecuación (1). En consecuencia, con los datos de la tabla, sea gráfica o analíticamente, <em class="preg">se obtendrá la pendiente y término independiente de esa relación y, por comparación con (1), se determinará la energía inicial E<sub>0</sub> del haz de iones, y se verificará la (ya obtenida) de los mismos</em>.</p>
+<p>Tomar ahora las primeras líneas de la última tabla. La relación entre la energía al cabo del pase n-ésimo E<sub>n</sub> y n deben seguir la relación lineal descrita en la ecuación (1): E<sub>n</sub> =  n q V<sub>0</sub> + E<sub>0</sub>. En consecuencia, con los datos de la tabla, sea gráfica o analíticamente, <em class="preg">se obtendrá la pendiente y término independiente de esa relación y, por comparación con (1), se determinará la energía inicial E<sub>0</sub> del haz de iones, y se verificará la ya obtenida carga de los mismos</em>.</p>
 
 <p style="font-weight: bold;">Para rematar, unir estos resultados con los obtenidos sobre la frecuencia ciclotrón para escribir los valores de q, m y E<sub>0</sub> de los iones acelerados.</p>
 
+<a href="#ref">ir a módulo de experimentación</a>
+
 <h2 >6. Preguntas de comprensión</h2>
 <p><b>1)</b> Sabemos que el campo magnético, a través de la fuerza de Lorentz <b>F</b><sub>m</sub> = q <b>v</b> &times; <b>B</b>, no cambia la celeridad de una carga, ya que no realiza trabajo al ser <b>F</b><sub>m</sub> &sdot; <b>v</b> = 0. </p>
-<p>Entonces, <em class="preg">¿por qué el campo magnético <b>B</b> es tan importante, como se expresa en la ecuación (5), en la energía final E<sub>f</sub> alcanzada en el ciclotrón? </em></p>
+<p>Entonces, <em class="preg">¿por qué el campo magnético <b>B</b> es tan importante, como se expresa en la ecuación (5): E<sub>f</sub> = &frac12; m v<sub>f</sub>&sup2; = q&sup2;B&sup2; R<sub>D</sub>&sup2;/2m, en la energía final E<sub>f</sub> alcanzada en el ciclotrón? </em></p>
 
 <p><b>2)</b> Considerar un voltaje alterno V(t) = V<sub>0</sub> cos (<sup>2&pi;</sup>/<sub>T</sub> t), siendo T su periodo. En t = 0, V es máximo, igual a la amplitud V<sub>0</sub>. En un tiempo t<sub>1</sub> = T+&epsilon;, con el desfase &epsilon; << T, V será positivo y <i>casi</i> máximo pues T+&epsilon; es solo <i>casi</i> un periodo. En un tiempo t<sub>2</sub> = 2(T+&epsilon;) V será aún positivo pero menor que antes. Etcétera. <em class="preg">¿Al cabo de qué tiempo t<sub>n</sub> = n(T+&epsilon;) el voltaje V empieza a ser negativo?</em> <br>
 Si n = 500, <em class="preg"> ¿cuál sería entonces el valor de &epsilon;? ¿Tiene esto relación con alguno de los resultados anteriores?</em></p>
 
-<p><b>3)</b> Se dice que los ciclotrones no funcionan cuando la velocidad de las partículas es alta. Ahora debemos tener claro que los ciclotrones funcionan debido a que, al ser las trayectorias de los iones <i>isócronas</i>, cabe "sincronizarlas" con un potencial acelerador alterno, como se expresa en la ecuación (4). <em class="preg">De lo que sabes de la relatividad restringida ¿qué puede hacer que esa sincronización falle?</em></p>
+<p><b>3)</b> Se dice que los ciclotrones no funcionan cuando la velocidad de las partículas es alta. Ahora debemos tener claro que los ciclotrones funcionan debido a que, al ser las trayectorias de los iones <i>isócronas</i>, cabe "sincronizarlas" con un potencial acelerador alterno, como se expresa en la ecuación (4): T<sub>V</sub> = T<sub>B</sub>, al valor T<sub>B</sub> experimental dado por la ecuación (3): T<sub>B</sub> = 2&pi;m / qB ?</em> <br> <em class="preg">De lo que sabes de la relatividad restringida ¿qué puede hacer que esa sincronización falle?</em></p>
+
+<a href="#ref">ir a módulo de experimentación</a>
 
 <h2>7. Ejercicios de evaluación</h2>
 <p><b>1)</b> En un ciclotrón un haz de iones con cierta energía inicial es acelerado progresivamente de manera que va ganando energía según los valores de la tabla mostrada; por ejemplo 5 1,63 quiere decir que, tras 5 pases entre <i>dés</i>, el haz ha alcanzado una energía de 1,63 MeV. Hallar la diferencia de potencial V<sub>0</sub> aplicada  entre <i>dés</i> y la energía inicial E<sub>0</sub>.
