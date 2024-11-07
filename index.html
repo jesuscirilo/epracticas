@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title> ePrácticas de Fisica</title>
+
+<script language="JavaScript" type="text/javascript">
+
+var dni;
+function validar_dni(id){
+	switch (id) {
+	case 'gravitacion':
+		var dni=document.getElementById('dni-gravitacion').value;
+		if ( dni.length==8 && /\d{8}/.test(dni))
+		window.open("eGravitacion.html?dni="+dni,'_blank');
+	break;
+	case 'foto':
+		var dni=document.getElementById('dni-foto').value;
+		if ( dni.length==8 && /\d{8}/.test(dni))
+		window.open("eFotoelectricidad.html?dni="+dni,'_blank');
+	break;
+    case 'ciclotron':
+		var dni=document.getElementById('dni-ciclotron').value;
+		if ( dni.length==8 && /\d{8}/.test(dni))
+		window.open("eCiclotron.html?dni="+dni,'_blank');	
+  }
+}
+</script>
+
+<style>
+
+body {
+    padding-left:30px;
+    padding-right:30px;
+    font-size: 130%;
+	font-family:Georgia;
+   line-height: 130%;
+    // otras: Calibri, Arial, Times, Verdana, Optima, Cambria
+   font-size: 1.5em;
+   }
+
+h1 {
+    color:darkgreen;
+    text-align:center;
+    font-size: 2em;
+}
+
+h2,h3 {
+    color:darkgreen;
+    text-align:center;
+    font-size: larger;
+}
+
+li{
+    margin-bottom:5px;
+    text-align: left;
+    color:#A97505;
+    font-weight:bold;
+}
+
+button{
+    margin-top:50px;
+    background-color:darkKhaki;
+    color:white;
+    padding:4px;
+    font-weight:bold;
+}
+
+dt{
+    font-weight:normal;
+    color:#660000;
+    font-size: larger;
+}
+
+dd {
+    font-weight:normal;
+    color:DarkGoldenRod;
+    font-size: larger;
+
+}
+
+td{
+      padding:25px;
+}
+
+tr{
+     padding-bottom: 15 px;
+}
+
+label{
+    color:#660000;
+}
+
+input {
+    font-size: 100%;
+}
+
+table{
+    width: 95%;
+}
+
+img{
+    width:350px;
+    padding:15px;
+}
+
+</style>
+</head>
+
+<body>
+<h1 > ePrácticas de Física, CAFI</h1>
+
+<h2 style="color:#e0b116;">Jesús J. Maza (jjrcmf@gmail.com)</h2>
+
+<table>
+
+<tr>
+<td>
+<img  alt="gravitación" src="figuras/gravedad.png" width="200"/>
+</td>
+<td>
+<h2>Órbitas</h2>
+	<dt>Conceptos:</dt>
+	<dd>Fuerza de atracción gravitatoria, leyes de conservación, tipos de órbitas, velocidad de escape.</dd>
+	<dt>Habilidades:</dt>
+	<dd>Representación espacial, manejo de tablas, graficación y=f(x), regresión lineal.</dd>
+
+</td>
+<td>
+<label for="dni-gravitacion">Introduzca DNI <br>(8 dígitos solo):</label><br>
+ <input value="12345678" type="text" id="dni-gravitacion" size="8">
+<button id="gravitacion" type="button"  onclick="validar_dni(this.id);">VAMOS A ELLO </button>
+</td>
+</tr>
+
+
+<tr>
+<td>
+<img  alt="fotoelectricidad" src="figuras/fotoelectricidad.jpeg" width="200"/>
+</td>
+<td>
+<h2>Efecto fotoeléctrico</h2>
+	<dt>Conceptos:</dt>
+	<dd>energía de radiación, fotón, energías electrónicas, intensidad de corriente y potencia.</dd>
+	<dt>Habilidades:</dt>
+	<dd>Manejo de tablas,  graficación y=f(x), regresión lineal.</dd>
+</td>
+<td>
+<label for="dni-foto">Introduzca DNI <br>(8 dígitos solo):</label><br> 
+<input value="12345678" type="text" id="dni-foto" size="8">
+<button id="foto" type="button"  onclick="validar_dni(this.id);">VAMOS A ELLO</button>
+</td>
+</tr>
+
+
+<tr>
+<td>
+<img  alt="ciclotrón" src="figuras/ciclotron-Berkeley.jpg" width="200"/>
+</td>
+<td>
+<h2>El ciclotrón</h2>
+	<dt>Conceptos:</dt>
+	<dd>Movimiento bajo campos magnéticos, potencial eléctrico y energía electrostática, aceleradores de partículas.</dd>
+	<dt>Habilidades:</dt>
+	<dd>Representación espacial, manejo de tablas, graficación y=f(x), regresión lineal.</dd>
+
+</td>
+<td>
+<label for="dni-ciclotron">Introduzca DNI <br>(8 dígitos solo):</label><br>
+ <input value="12345678" type="text" id="dni-ciclotron" size="8">
+<button id="ciclotron" type="button"  onclick="validar_dni(this.id);">VAMOS A ELLO </button>
+</td>
+</tr>
+
+</table>
+
+
+</body>
+</html>
